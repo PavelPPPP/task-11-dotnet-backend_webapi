@@ -5,6 +5,7 @@ using ModelApi.Services.DataSource;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,14 +16,29 @@ namespace ModelApi.Services.Repositories
         public TypesExpensesRepository(SelfFinanceDbContext dbContext) 
             : base(dbContext) { }
 
-        public async Task<IEnumerable<TypeExpense>> GetAll()
+        public async Task<IEnumerable<TypeExpense>> GetAllAsync()
         {
             var result = await _dbContext.TypesExpenses.ToListAsync();
 
             return result;
         }
 
-        public async Task<IEnumerable<TypeExpense>> GetWithFilterById(int? typeId)
+        public async Task<IEnumerable<TResult>> GetAllWithProjectionAsync<TResult>(Expression<Func<TypeExpense, TResult>> selector)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+
+            var result = await _dbContext.TypesExpenses
+                .Select(selector)
+                .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<TypeExpense>> GetWithFilterByIdAsync(int? typeId)
         {
             if (typeId == null) throw new ArgumentNullException(nameof(typeId));
 
@@ -33,7 +49,7 @@ namespace ModelApi.Services.Repositories
             return result;
         }
 
-        public async Task<TypeExpense> GetById(int? typeId)
+        public async Task<TypeExpense> GetByIdAsync(int? typeId)
         {
             if (typeId == null) throw new ArgumentNullException(nameof(typeId));
 
@@ -42,6 +58,31 @@ namespace ModelApi.Services.Repositories
                 .SingleOrDefaultAsync();
 
             return result!;
+        }
+
+        public async Task<TypeExpense> GetByIdWithDetailAsync(int? typeId)
+        {
+            if (typeId == null) throw new ArgumentNullException(nameof(typeId));
+
+            var result = await _dbContext.TypesExpenses
+                .Include(ti => ti.Expenses)
+                .Where(ti => ti.Id == typeId)
+                .SingleOrDefaultAsync();
+
+            return result!;
+        }
+
+        public async Task<TResult?> GetByIdWithProjectionAsync<TResult>(int? id, Expression<Func<TypeExpense, TResult>> selector)
+        {
+            if (id == null) throw new ArgumentNullException(nameof(id));
+            if (selector is null) throw new ArgumentNullException(nameof(selector));
+
+            var result = await _dbContext.TypesExpenses
+                .Where(ti => ti.Id == id)
+                .Select(selector)
+                .SingleOrDefaultAsync();
+
+            return result;
         }
 
         public async Task CreateAsync(TypeExpense typesExpenses)

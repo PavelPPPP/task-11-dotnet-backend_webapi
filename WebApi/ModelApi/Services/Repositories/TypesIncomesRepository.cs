@@ -5,6 +5,7 @@ using ModelApi.Services.DataSource;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,14 +16,29 @@ namespace ModelApi.Services.Repositories
         public TypesIncomesRepository(SelfFinanceDbContext dbContext)
             : base(dbContext) { }
 
-        public async Task<IEnumerable<TypeIncome>> GetAll()
+        public async Task<IEnumerable<TypeIncome>> GetAllAsync()
         {
             var result = await _dbContext.TypesIncomes.ToListAsync();
 
             return result;
         }
 
-        public async Task<IEnumerable<TypeIncome>> GetWithFilterById(int? typeId)
+        public async Task<IEnumerable<TResult>> GetAllWithProjectionAsync<TResult>(Expression<Func<TypeIncome, TResult>> selector)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+
+            var result = await _dbContext.TypesIncomes
+                .Select(selector)
+                .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<TypeIncome>> GetWithFilterByIdAsync(int? typeId)
         {
             if (typeId == null) throw new ArgumentNullException(nameof(typeId));
 
@@ -33,7 +49,7 @@ namespace ModelApi.Services.Repositories
             return result;
         }
 
-        public async Task<TypeIncome> GetById(int? typeId)
+        public async Task<TypeIncome> GetByIdAsync(int? typeId)
         {
             if (typeId == null) throw new ArgumentNullException(nameof(typeId));
 
@@ -42,6 +58,31 @@ namespace ModelApi.Services.Repositories
                 .SingleOrDefaultAsync();
 
             return result!;
+        }
+
+        public async Task<TypeIncome> GetByIdWithDetailAsync(int? typeId)
+        {
+            if (typeId == null) throw new ArgumentNullException(nameof(typeId));
+
+            var result = await _dbContext.TypesIncomes
+                .Include(ti => ti.Incomes)
+                .Where(ti => ti.Id == typeId)
+                .SingleOrDefaultAsync();
+
+            return result!;
+        }
+
+        public async Task<TResult?> GetByIdWithProjectionAsync<TResult>(int? id, Expression<Func<TypeIncome, TResult>> selector)
+        {
+            if (id == null) throw new ArgumentNullException(nameof(id));
+            if (selector is null) throw new ArgumentNullException(nameof(selector));
+
+            var result = await _dbContext.TypesIncomes
+                .Where(ti => ti.Id == id)
+                .Select(selector)
+                .SingleOrDefaultAsync();
+
+            return result;
         }
 
         public async Task CreateAsync(TypeIncome typesIncomes)
@@ -69,6 +110,17 @@ namespace ModelApi.Services.Repositories
             if (typesIncomes is null)
             {
                 throw new ArgumentNullException(nameof(typesIncomes));
+            }
+
+            if (typesIncomes.Incomes is null)
+            {
+                throw new NullReferenceException(nameof(typesIncomes));
+            }
+
+            if (typesIncomes.Incomes.Count > 0)
+            {
+                throw new InvalidOperationException("Deleting is not possible. \n\n" +
+                    "Please clear the list Incomes fo this income type!");
             }
 
             _dbContext.TypesIncomes.Remove(typesIncomes);

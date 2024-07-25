@@ -8,8 +8,8 @@ namespace ModelApi.ValueObjects
 
         protected FreeText() { }
         public FreeText(string? text)
-        {            
-            Value = text ?? throw new ArgumentNullException(nameof(text));
+        {
+            Value = text;
         }
         protected override IEnumerable<object> GetEqualityComponents()
         {

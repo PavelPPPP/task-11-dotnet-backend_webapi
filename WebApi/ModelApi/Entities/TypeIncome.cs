@@ -4,7 +4,7 @@ namespace ModelApi.Entities
 {
     public class TypeIncome : TypeBase
     {
-        public List<Income> Incomes { get; private set; } = new();
+        public List<Income>? Incomes { get; private set; }
         protected TypeIncome() : base() { }
         public TypeIncome(Name name, FreeText? description/*, DateOperation createDate, DateOperation? updateDate*/) : this()
         {

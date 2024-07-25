@@ -13,6 +13,6 @@ namespace ModelApi.Interfaces
         IBallanseRepository<Expense> Expenses { get; }
         //IExpenseRepository<Expense> Expenses { get; }
 
-        Task Save();
+        Task SaveAsync();
     }
 }

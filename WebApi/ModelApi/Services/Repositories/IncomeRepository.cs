@@ -16,14 +16,29 @@ namespace ModelApi.Services.Repositories
         public IncomeRepository(SelfFinanceDbContext dbContext)
             : base(dbContext) { }
 
-        public async Task<IEnumerable<Income>> GetAll()
+        public async Task<IEnumerable<Income>> GetAllAsync()
         {
             var result = await _dbContext.Incomes.ToListAsync();
 
             return result;
         }
 
-        public async Task<IEnumerable<Income>> GetWithFilterById(int? id)
+        public async Task<IEnumerable<TResult>> GetAllWithProjectionAsync<TResult>(Expression<Func<Income, TResult>> selector)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+
+            var result = await _dbContext.Incomes
+                .Select(selector)
+                .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<Income>> GetWithFilterByIdAsync(int? id)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
 
@@ -34,7 +49,7 @@ namespace ModelApi.Services.Repositories
             return result;
         }
 
-        public async Task<Income> GetById(int? id)
+        public async Task<Income> GetByIdAsync(int? id)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
 
@@ -45,7 +60,20 @@ namespace ModelApi.Services.Repositories
             return result!;
         }
 
-        public async Task<double?> GetSumYesterday()
+        public async Task<TResult?> GetByIdWithProjectionAsync<TResult>(int? id, Expression<Func<Income, TResult>> selector)
+        {
+            if (id == null) throw new ArgumentNullException(nameof(id));
+            if (selector is null) throw new ArgumentNullException(nameof(selector));
+
+            var result = await _dbContext.Incomes
+                .Where(ti => ti.Id == id)
+                .Select(selector)
+                .SingleOrDefaultAsync();
+
+            return result;
+        }
+
+        public async Task<double?> GetSumYesterdayAsync()
         {
             DateTime dateNow = DateTime.Now;
 
@@ -56,17 +84,30 @@ namespace ModelApi.Services.Repositories
             return result;
         }
 
-        public async Task<IEnumerable<Income>> GetByYesterdayWithDetail()
+        //public async Task<IEnumerable<Income>> GetByYesterdayWithDetailAsync()
+        //{
+        //    var result = await _dbContext.Incomes
+        //        .Include(i => i.TypeIncome)
+        //        .Where(IsYesterdayDay())
+        //        .ToListAsync();
+
+        //    return result;
+        //}
+
+        public async Task<IEnumerable<TResult>> GetByYesterdayWithDetailAndProjectionAsync<TResult>(Expression<Func<Income, TResult>> selector)
         {
+            if (selector is null) throw new ArgumentNullException(nameof(selector));
+
             var result = await _dbContext.Incomes
                 .Include(i => i.TypeIncome)
                 .Where(IsYesterdayDay())
+                .Select(selector)
                 .ToListAsync();
 
             return result;
         }
 
-        public async Task<double?> GetSumByPeriod(DateTime fromDate, DateTime toDate)
+        public async Task<double?> GetSumByPeriodAsync(DateTime fromDate, DateTime toDate)
         {
             var result = await _dbContext.Incomes
                 .Where(IsByPeriod(fromDate, toDate))
@@ -75,10 +116,23 @@ namespace ModelApi.Services.Repositories
             return result;
         }
 
-        public async Task<IEnumerable<Income>> GetByPeriodWithDetail(DateTime fromDate, DateTime toDate)
+        //public async Task<IEnumerable<Income>> GetByPeriodWithDetailAsync(DateTime fromDate, DateTime toDate)
+        //{
+        //    var result = await _dbContext.Incomes.Include(ti => ti.TypeIncome)
+        //        .Where(IsByPeriod(fromDate, toDate))
+        //        .ToListAsync();
+
+        //    return result;
+        //}
+
+        public async Task<IEnumerable<TResult>> GetByPeriodWithDetailAndProjectionAsync<TResult>(DateTime fromDate, DateTime toDate, Expression<Func<Income, TResult>> selector)
         {
-            var result = await _dbContext.Incomes.Include(ti => ti.TypeIncome)
+            if (selector is null) throw new ArgumentNullException(nameof(selector));
+
+            var result = await _dbContext.Incomes
+                .Include(ti => ti.TypeIncome)
                 .Where(IsByPeriod(fromDate, toDate))
+                .Select(selector)
                 .ToListAsync();
 
             return result;

@@ -23,7 +23,7 @@ namespace ModelApi.ValueObjects
         private void ValidateArguments(string? name)
         {
             if (String.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
-            if (!Regex.IsMatch(name, @"^[\w]+$")) throw new ArgumentException("The argument \"Name\" must consist of letters and numbers only! ");
+            if (!Regex.IsMatch(name, @"^\w+(\s*\w*)*\w+$")) throw new ArgumentException("The argument \"Name\" must consist of letters, numbers and spasies only! ");
         }
     }
 }

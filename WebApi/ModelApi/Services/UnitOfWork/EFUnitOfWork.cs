@@ -38,7 +38,7 @@ namespace ModelApi.Services.UnitOfWork
         public IBallanseRepository<Expense> Expenses => _expenseRepository;
         //public IExpenseRepository<Expense> Expenses => _expenseRepository;
 
-        public async Task Save()
+        public async Task SaveAsync()
         {
             await _dbContext.SaveChangesAsync();
         }

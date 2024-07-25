@@ -31,7 +31,7 @@ namespace ModelApi.Test.RepositoriesTest
             string desc = "salary";
             DateTime createdDateTime = DateTime.Parse("2024-05-18 22:23:09.880");
 
-            TypeIncome typeIncome = _unitOfWork!.TypesIncomes.GetById(id).Result;
+            TypeIncome typeIncome = _unitOfWork!.TypesIncomes.GetByIdAsync(id).Result;
 
             Assert.IsNotNull(typeIncome);
             Assert.AreEqual(id, typeIncome.Id);
@@ -45,7 +45,7 @@ namespace ModelApi.Test.RepositoriesTest
         {
             int id = 200;
 
-            TypeIncome typeIncome = _unitOfWork!.TypesIncomes.GetById(id).Result;
+            TypeIncome typeIncome = _unitOfWork!.TypesIncomes.GetByIdAsync(id).Result;
 
             Assert.IsNull(typeIncome);
         }
@@ -53,7 +53,7 @@ namespace ModelApi.Test.RepositoriesTest
         [TestMethod]
         public void GetAllTypesIncomes()
         {
-            IEnumerable<TypeIncome> listTypesIncomes = _unitOfWork!.TypesIncomes.GetAll().Result;
+            IEnumerable<TypeIncome> listTypesIncomes = _unitOfWork!.TypesIncomes.GetAllAsync().Result;
 
             Assert.IsNotNull(listTypesIncomes);
             Assert.IsTrue(listTypesIncomes.Count() >= 3);
@@ -62,7 +62,7 @@ namespace ModelApi.Test.RepositoriesTest
         [TestMethod]
         public void GetNullTypesIncomesWithFilter()
         {
-            IEnumerable<TypeIncome> listTypesIncomes = _unitOfWork!.TypesIncomes.GetWithFilterById(100).Result;
+            IEnumerable<TypeIncome> listTypesIncomes = _unitOfWork!.TypesIncomes.GetWithFilterByIdAsync(100).Result;
 
             Assert.IsNotNull(listTypesIncomes);
             Assert.IsTrue(listTypesIncomes.Count() == 0);
@@ -72,12 +72,12 @@ namespace ModelApi.Test.RepositoriesTest
         public void CreateTypeIncome()
         {
             TypeIncome insertedTypeIncome = null!;
-            int? lastId = _unitOfWork!.TypesIncomes.GetAll().Result.Last().Id;
+            int? lastId = _unitOfWork!.TypesIncomes.GetAllAsync().Result.Last().Id;
             TypeIncome createTypeIncome = new TypeIncome(new Name("test"), null);
 
             _unitOfWork.TypesIncomes.CreateAsync(createTypeIncome);
-            _unitOfWork.Save();
-            insertedTypeIncome = _unitOfWork.TypesIncomes.GetById(lastId + 1).Result;
+            _unitOfWork.SaveAsync();
+            insertedTypeIncome = _unitOfWork.TypesIncomes.GetByIdAsync(lastId + 1).Result;
             
             Assert.IsNotNull(insertedTypeIncome);
             Assert.IsTrue(insertedTypeIncome == createTypeIncome);
@@ -86,13 +86,13 @@ namespace ModelApi.Test.RepositoriesTest
         [TestMethod]
         public void UpdateTypeIncome()
         {
-            TypeIncome editingTypeIncome = _unitOfWork!.TypesIncomes.GetById(3).Result;
+            TypeIncome editingTypeIncome = _unitOfWork!.TypesIncomes.GetByIdAsync(3).Result;
             FreeText descBeforeEdit = editingTypeIncome.Description!;
 
             editingTypeIncome.Change(new Name("name3_edit1"), new FreeText("desc3_edit1"));
             _unitOfWork.TypesIncomes.Update(editingTypeIncome);
-            _unitOfWork.Save().Wait();
-            TypeIncome editedTypeIncome = _unitOfWork!.TypesIncomes.GetById(3).Result;
+            _unitOfWork.SaveAsync().Wait();
+            TypeIncome editedTypeIncome = _unitOfWork!.TypesIncomes.GetByIdAsync(3).Result;
             FreeText descAfterEdit = editingTypeIncome.Description!;
 
             Assert.IsNotNull(editedTypeIncome);
@@ -102,13 +102,34 @@ namespace ModelApi.Test.RepositoriesTest
         [TestMethod]
         public void DeleteTypeIncome()
         {
-            TypeIncome deletingTypeIncome = _unitOfWork!.TypesIncomes.GetById(4).Result;
+            TypeIncome deletingTypeIncome = _unitOfWork!.TypesIncomes.GetByIdAsync(4).Result;
 
             _unitOfWork.TypesIncomes.Delete(deletingTypeIncome);
-            _unitOfWork.Save().Wait();
-            TypeIncome deletedTypeIncome = _unitOfWork.TypesIncomes.GetById(4).Result;
+            _unitOfWork.SaveAsync().Wait();
+            TypeIncome deletedTypeIncome = _unitOfWork.TypesIncomes.GetByIdAsync(4).Result;
 
             Assert.IsNull(deletedTypeIncome);
+        }
+
+        [TestMethod]
+        public void DeleteTypeIncome_WithDependens_CallArgumentNullException()
+        {
+            //TypeIncome deletingTypeIncome = _unitOfWork!.TypesIncomes.GetById(4).Result;
+            Assert.ThrowsException<ArgumentNullException>(() => _unitOfWork?.TypesIncomes.Delete(null!));
+        }
+
+        [TestMethod]
+        public void DeleteTypeIncome_WithDependens_CallNullReferenceException()
+        {
+            TypeIncome deletingTypeIncome = _unitOfWork!.TypesIncomes.GetByIdAsync(4).Result;
+            Assert.ThrowsException<NullReferenceException>(() => _unitOfWork?.TypesIncomes.Delete(deletingTypeIncome));
+        }
+
+        [TestMethod]
+        public void DeleteTypeIncome_WithDependens_CallInvalidOperationException()
+        {
+            TypeIncome deletingTypeIncome = _unitOfWork!.TypesIncomes.GetByIdWithDetailAsync(4).Result;
+            Assert.ThrowsException<InvalidOperationException>(() => _unitOfWork?.TypesIncomes.Delete(deletingTypeIncome));
         }
     }
 }

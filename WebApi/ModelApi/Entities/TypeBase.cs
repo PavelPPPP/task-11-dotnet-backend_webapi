@@ -15,9 +15,9 @@ namespace ModelApi.Entities
 
         public void Change(Name name, FreeText? description)
         {
-            Name = name ?? this.Name; //?? throw new ArgumentNullException(nameof(name));
+            Name = name ?? throw new ArgumentNullException(nameof(name));
 
-            Description = description ?? this.Description;
+            Description = description;
             UpdateDate = new DateOperation();
         }
     }

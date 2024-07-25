@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="CollectionEndpoints\ExpenseEndpoints.cs" />
+    <Compile Remove="CollectionEndpoints\IncomeEndpoints.cs" />
+    <Compile Remove="CollectionEndpoints\TypeExpenseEndpoints.cs" />
+    <Compile Remove="CollectionEndpoints\TypeIncomeEndpoints.cs" />
+    <Compile Remove="ServicesEndpoints\ExpenseEndpointsService.cs" />
+    <Compile Remove="ServicesEndpoints\IncomeEndpointsService.cs" />
+    <Compile Remove="ServicesEndpoints\TypeExpenseEndpointsService.cs" />
+    <Compile Remove="ServicesEndpoints\TypeIncomeEndpointsService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="CollectionEndpoints\ExpenseEndpoints.cs" />
+    <None Include="CollectionEndpoints\IncomeEndpoints.cs" />
+    <None Include="CollectionEndpoints\TypeExpenseEndpoints.cs" />
+    <None Include="CollectionEndpoints\TypeIncomeEndpoints.cs" />
+    <None Include="ServicesEndpoints\ExpenseEndpointsService.cs" />
+    <None Include="ServicesEndpoints\IncomeEndpointsService.cs" />
+    <None Include="ServicesEndpoints\TypeExpenseEndpointsService.cs" />
+    <None Include="ServicesEndpoints\TypeIncomeEndpointsService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\InfrastructureApi\InfrastructureApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="OpenApiDocs\" />
+  </ItemGroup>
+
+</Project>

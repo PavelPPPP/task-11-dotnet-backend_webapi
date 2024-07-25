@@ -36,7 +36,7 @@ namespace ModelApi.Test.RepositoriesTest
             string desc = "communal payments";
             DateTime createdDateTime = DateTime.Parse("2024-05-19 00:22:05.680");
 
-            TypeExpense? typeExpense = _unitOfWork?.TypesExpenses.GetById(id).Result;
+            TypeExpense? typeExpense = _unitOfWork?.TypesExpenses.GetByIdAsync(id).Result;
 
             Assert.IsNotNull(typeExpense);
             Assert.AreEqual(id, typeExpense.Id);
@@ -50,7 +50,7 @@ namespace ModelApi.Test.RepositoriesTest
         {
             int id = 200;
 
-            TypeExpense? typeExpense = _unitOfWork?.TypesExpenses.GetById(id).Result;
+            TypeExpense? typeExpense = _unitOfWork?.TypesExpenses.GetByIdAsync(id).Result;
 
             Assert.IsNull(typeExpense);
         }
@@ -58,7 +58,7 @@ namespace ModelApi.Test.RepositoriesTest
         [TestMethod]
         public void GetAllTypesExpenses()
         {
-            IEnumerable<TypeExpense>? listTypesExpenses = _unitOfWork?.TypesExpenses.GetAll().Result;
+            IEnumerable<TypeExpense>? listTypesExpenses = _unitOfWork?.TypesExpenses.GetAllAsync().Result;
 
             Assert.IsNotNull(listTypesExpenses);
             Assert.IsTrue(listTypesExpenses.Count() >= 3);
@@ -67,7 +67,7 @@ namespace ModelApi.Test.RepositoriesTest
         [TestMethod]
         public void GetNullTypesExpensesWithFilter()
         {
-            IEnumerable<TypeExpense>? listTypesExpenses = _unitOfWork?.TypesExpenses.GetWithFilterById(100).Result;
+            IEnumerable<TypeExpense>? listTypesExpenses = _unitOfWork?.TypesExpenses.GetWithFilterByIdAsync(100).Result;
 
             Assert.IsNotNull(listTypesExpenses);
             Assert.IsTrue(listTypesExpenses.Count() == 0);
@@ -76,12 +76,12 @@ namespace ModelApi.Test.RepositoriesTest
         [TestMethod]
         public void CreateTypeExpense()
         {
-            int? lastId = _unitOfWork?.TypesExpenses.GetAll().Result.Last().Id;
+            int? lastId = _unitOfWork?.TypesExpenses.GetAllAsync().Result.Last().Id;
             TypeExpense? createTypeExpense = new TypeExpense(new Name("test"), null);
 
             _unitOfWork?.TypesExpenses.CreateAsync(createTypeExpense);
-            _unitOfWork?.Save();
-            TypeExpense? insertedTypeExpense = _unitOfWork?.TypesExpenses.GetById(lastId + 1).Result;
+            _unitOfWork?.SaveAsync();
+            TypeExpense? insertedTypeExpense = _unitOfWork?.TypesExpenses.GetByIdAsync(lastId + 1).Result;
 
             Assert.IsNotNull(insertedTypeExpense);
             Assert.IsTrue(insertedTypeExpense == createTypeExpense);
@@ -90,13 +90,13 @@ namespace ModelApi.Test.RepositoriesTest
         [TestMethod]
         public void UpdateTypeExpense()
         {
-            TypeExpense? editingTypeExpense = _unitOfWork?.TypesExpenses.GetById(6).Result;
+            TypeExpense? editingTypeExpense = _unitOfWork?.TypesExpenses.GetByIdAsync(6).Result;
             FreeText? descBeforeEdit = editingTypeExpense?.Description;
 
             editingTypeExpense?.Change(new Name("name3_edit1"), new FreeText("desc3_edit1"));
             _unitOfWork?.TypesExpenses.Update(editingTypeExpense!);
-            _unitOfWork?.Save().Wait();
-            TypeExpense? editedTypeExpense = _unitOfWork?.TypesExpenses.GetById(3).Result;
+            _unitOfWork?.SaveAsync().Wait();
+            TypeExpense? editedTypeExpense = _unitOfWork?.TypesExpenses.GetByIdAsync(3).Result;
             FreeText? descAfterEdit = editingTypeExpense?.Description;
 
             Assert.IsNotNull(editedTypeExpense);
@@ -106,11 +106,11 @@ namespace ModelApi.Test.RepositoriesTest
         [TestMethod]
         public void DeleteTypeExpense()
         {
-            TypeExpense? deletingTypeExpense = _unitOfWork?.TypesExpenses.GetById(6).Result;
+            TypeExpense? deletingTypeExpense = _unitOfWork?.TypesExpenses.GetByIdAsync(6).Result;
 
             _unitOfWork?.TypesExpenses.Delete(deletingTypeExpense!);
-            _unitOfWork?.Save().Wait();
-            TypeExpense? deletedTypeExpense = _unitOfWork?.TypesExpenses.GetById(6).Result;
+            _unitOfWork?.SaveAsync().Wait();
+            TypeExpense? deletedTypeExpense = _unitOfWork?.TypesExpenses.GetByIdAsync(6).Result;
 
             Assert.IsNull(deletedTypeExpense);
         }
