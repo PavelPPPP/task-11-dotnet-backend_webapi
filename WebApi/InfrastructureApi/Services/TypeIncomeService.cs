@@ -1,18 +1,12 @@
 ﻿using InfrastructureApi.Common;
 using InfrastructureApi.DTO;
-using InfrastructureApi.Interfaces;
 using ModelApi.Entities;
 using ModelApi.Interfaces;
 using ModelApi.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InfrastructureApi.Services
 {
-    public class TypeIncomeService : ModelService, ITypeBaseService<TypeIncomeDTO>
+    public class TypeIncomeService : ModelService, IEntityService<TypeIncomeDTO>
     {
         private readonly ITypesBaseRepository<TypeIncome>? _typeIncomeRepository;
 

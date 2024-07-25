@@ -9,8 +9,6 @@ namespace ModelApi.Entities
         public TypeExpense(Name name, FreeText? description) : this()
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            //CreateDate = createDate ?? throw new ArgumentNullException(nameof(createDate));
-            //UpdateDate = updateDate;
             Description = description;
         }
     }

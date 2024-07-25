@@ -2,11 +2,6 @@
 using ModelApi.Interfaces;
 using ModelApi.Services.DataSource;
 using ModelApi.Services.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ModelApi.Services.UnitOfWork
 {
@@ -31,12 +26,8 @@ namespace ModelApi.Services.UnitOfWork
 
         public ITypesBaseRepository<TypeIncome> TypesIncomes => _typesIncomesRepository;
         public ITypesBaseRepository<TypeExpense> TypesExpenses => _typesExpensesRepository;
-        //public ITypesIncomesRepository<TypeIncome> TypesIncomes => _typesIncomesRepository;
-        //public ITypeExpenseRepository<TypeExpense> TypesExpenses => _typeExpenseRepository;
-        //public IIncomeRepository<Income> Incomes => _incomeRepository;
         public IBallanseRepository<Income> Incomes => _incomeRepository;
         public IBallanseRepository<Expense> Expenses => _expenseRepository;
-        //public IExpenseRepository<Expense> Expenses => _expenseRepository;
 
         public async Task SaveAsync()
         {

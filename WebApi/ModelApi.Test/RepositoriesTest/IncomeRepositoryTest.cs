@@ -4,11 +4,6 @@ using ModelApi.Interfaces;
 using ModelApi.Services.DataSource;
 using ModelApi.Services.UnitOfWork;
 using ModelApi.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ModelApi.Test.RepositoriesTest
 {
@@ -137,73 +132,5 @@ namespace ModelApi.Test.RepositoriesTest
             Assert.IsNotNull(actual);
             Assert.AreEqual(expected, actual);
         }
-
-        //[TestMethod]
-        //public void GetByYesterdayWithDetail_Test()
-        //{
-        //    int? expectedId = 15;
-        //    int? expectedTypeId = 4;
-        //    string? expectedNameType = "money transfer";
-
-        //    IEnumerable<Income>? incomes = _unitOfWork?.Incomes.GetByYesterdayWithDetailAsync().Result;
-        //    int? count = incomes?.Count();
-        //    Income? firstItem = incomes?.FirstOrDefault();
-            
-        //    int? actualId = firstItem?.Id;
-        //    int? actualTypeId = firstItem?.TypeId;
-        //    string? actualNameType = firstItem?.TypeIncome?.Name.Value;
-
-        //    Assert.IsNotNull(incomes);
-        //    Assert.IsTrue(count > 0);
-        //    Assert.IsNotNull(firstItem);
-        //    Assert.IsNotNull(firstItem.TypeIncome);
-
-        //    Assert.AreEqual(expectedId, actualId);
-        //    Assert.AreEqual(expectedTypeId, actualTypeId);
-        //    Assert.AreEqual(expectedNameType, actualNameType);
-        //}
-
-        //[TestMethod]
-        //public void GetByPeriodWithDetail_Test()
-        //{
-        //    int? expectedFirstId = 1;
-        //    int? expectedFirstTypeId = 1;
-        //    string? expectedFirstNameType = "salary";
-
-        //    int? expectedLastId = 5;
-        //    int? expectedLastTypeId = 3;
-        //    string? expectedLastNameType = "cashback";
-
-        //    IEnumerable<Income>? incomes = _unitOfWork?.Incomes.GetByPeriodWithDetail(DateTime.Parse("2024-03-01"), DateTime.Parse("2024-03-31")).Result;
-        //    int? count = incomes?.Count();
-            
-        //    Income? firstItem = incomes?.FirstOrDefault();
-        //    Income? lastItem = incomes?.LastOrDefault();
-
-        //    int? actualFirstId = firstItem?.Id;
-        //    int? actualFirstTypeId = firstItem?.TypeId;
-        //    string? actualFirstNameType = firstItem?.TypeIncome?.Name.Value;
-
-        //    int? actualLastId = lastItem?.Id;
-        //    int? actualLastTypeId = lastItem?.TypeId;
-        //    string? actualLastNameType = lastItem?.TypeIncome?.Name.Value;
-
-        //    Assert.IsNotNull(incomes);
-        //    Assert.IsTrue(count > 0);
-
-        //    Assert.IsNotNull(firstItem);
-        //    Assert.IsNotNull(firstItem.TypeIncome);
-
-        //    Assert.IsNotNull(lastItem);
-        //    Assert.IsNotNull(lastItem.TypeIncome);
-
-        //    Assert.AreEqual(expectedFirstId, actualFirstId);
-        //    Assert.AreEqual(expectedFirstTypeId, actualFirstTypeId);
-        //    Assert.AreEqual(expectedFirstNameType, actualFirstNameType);
-
-        //    Assert.AreEqual(expectedLastId, actualLastId);
-        //    Assert.AreEqual(expectedLastTypeId, actualLastTypeId);
-        //    Assert.AreEqual(expectedLastNameType, actualLastNameType);
-        //}
     }
 }

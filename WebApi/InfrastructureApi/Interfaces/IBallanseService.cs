@@ -1,12 +1,4 @@
-﻿using InfrastructureApi.Common;
-using InfrastructureApi.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace InfrastructureApi.Interfaces
+﻿namespace InfrastructureApi.Interfaces
 {
     public interface IBallanseService<T>
     {

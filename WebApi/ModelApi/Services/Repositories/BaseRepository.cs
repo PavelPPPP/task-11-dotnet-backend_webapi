@@ -1,10 +1,4 @@
-﻿using ModelApi.Interfaces;
-using ModelApi.Services.DataSource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ModelApi.Services.DataSource;
 
 namespace ModelApi.Services.Repositories
 {

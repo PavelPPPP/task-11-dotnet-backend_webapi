@@ -21,17 +21,6 @@ namespace ModelApi.Test.EntitiesTest
             Assert.ThrowsException<ArgumentException>(() => new Expense(new Amount(3200), -1, null));
         }
 
-        //[TestMethod]
-        //public void WhenTheRequiredChangeMethodParamsAreNull_ShouldThrowArgumentNullException()
-        //{
-        //    var dataExpenses = new Expense(new Amount(3200), new DateOperation(), null, 1, null);
-
-        //    Assert.ThrowsException<ArgumentNullException>(() => dataExpenses.Change(null!, null, null));
-        //    Assert.ThrowsException<ArgumentNullException>(() => dataExpenses.Change(null!, 1, null));
-        //    Assert.ThrowsException<ArgumentNullException>(() => dataExpenses.Change(new Amount(3200), 1, null));
-        //    Assert.ThrowsException<ArgumentNullException>(() => dataExpenses.Change(new Amount(3200), null, new FreeText("asfd")));
-        //}
-
         [TestMethod]
         public void WhenTheRequiredChangeMethodParamsAreNotValid_ShouldThrowArgumentException()
         {

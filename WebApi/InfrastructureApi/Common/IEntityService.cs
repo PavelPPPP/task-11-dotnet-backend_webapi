@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace InfrastructureApi.Common
+﻿namespace InfrastructureApi.Common
 {
     public interface IEntityService<T> where T : class
     {

@@ -15,21 +15,7 @@ namespace ModelApi.Entities
 
         public void Change(Amount amount, int? typeId, FreeText? comments)
         {
-            //if (amount != null!) Amount = amount;
-            //if (typeId != null)
-            //{
-            //    if (typeId <= 0) throw new ArgumentException("TypeId could be is bigger then ziro!");
-
-            //    TypeId = typeId;
-            //}
-
-            //if (comments! != null!)
-            //{
-            //    Comments = comments;
-            //}
             ValidateArguments(amount, typeId);
-
-            //if (updateDate is null) throw new ArgumentNullException(nameof(updateDate));
 
             Amount = amount;
             UpdateDate = new DateOperation();

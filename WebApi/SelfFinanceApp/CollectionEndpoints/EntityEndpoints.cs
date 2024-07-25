@@ -1,7 +1,6 @@
 ﻿using InfrastructureApi.DTO;
 using InfrastructureApi.Common;
 using System.Text.RegularExpressions;
-using ModelApi.ValueObjects;
 
 namespace SelfFinanceApp.CollectionEndpoints
 {

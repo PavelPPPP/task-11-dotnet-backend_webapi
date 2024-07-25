@@ -2,12 +2,7 @@
 using ModelApi.Entities;
 using ModelApi.Interfaces;
 using ModelApi.Services.DataSource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ModelApi.Services.Repositories
 {
@@ -84,16 +79,6 @@ namespace ModelApi.Services.Repositories
             return result;
         }
 
-        //public async Task<IEnumerable<Income>> GetByYesterdayWithDetailAsync()
-        //{
-        //    var result = await _dbContext.Incomes
-        //        .Include(i => i.TypeIncome)
-        //        .Where(IsYesterdayDay())
-        //        .ToListAsync();
-
-        //    return result;
-        //}
-
         public async Task<IEnumerable<TResult>> GetByYesterdayWithDetailAndProjectionAsync<TResult>(Expression<Func<Income, TResult>> selector)
         {
             if (selector is null) throw new ArgumentNullException(nameof(selector));
@@ -115,15 +100,6 @@ namespace ModelApi.Services.Repositories
 
             return result;
         }
-
-        //public async Task<IEnumerable<Income>> GetByPeriodWithDetailAsync(DateTime fromDate, DateTime toDate)
-        //{
-        //    var result = await _dbContext.Incomes.Include(ti => ti.TypeIncome)
-        //        .Where(IsByPeriod(fromDate, toDate))
-        //        .ToListAsync();
-
-        //    return result;
-        //}
 
         public async Task<IEnumerable<TResult>> GetByPeriodWithDetailAndProjectionAsync<TResult>(DateTime fromDate, DateTime toDate, Expression<Func<Income, TResult>> selector)
         {

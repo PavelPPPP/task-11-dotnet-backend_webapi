@@ -11,7 +11,6 @@ namespace ModelApi.Test.EntitiesTest
         {
             Assert.ThrowsException<ArgumentNullException>(() => new Income(null!, null, null));
             Assert.ThrowsException<ArgumentNullException>(() => new Income(null!, 1, null));
-            //Assert.ThrowsException<ArgumentNullException>(() => new Income(new Amount(3200), 1, null));
             Assert.ThrowsException<ArgumentNullException>(() => new Income(new Amount(3200), null, new FreeText("sdfs")));
         }
 
@@ -21,17 +20,6 @@ namespace ModelApi.Test.EntitiesTest
             Assert.ThrowsException<ArgumentException>(() => new Income(new Amount(3200), 0, null));
             Assert.ThrowsException<ArgumentException>(() => new Income(new Amount(3200), -1, null));
         }
-
-        //[TestMethod]
-        //public void WhenTheRequiredChangeMethodParamsAreNull_ShouldThrowArgumentNullException()
-        //{
-        //    var dataIncomes = new Income(new Amount(3200), 1, null);
-            
-        //    Assert.ThrowsException<ArgumentNullException>(() => dataIncomes.Change(null!, null, null));
-        //    Assert.ThrowsException<ArgumentNullException>(() => dataIncomes.Change(null!, 1, null));
-        //    //Assert.ThrowsException<ArgumentNullException>(() => dataIncomes.Change(new Amount(3200), 1, null));
-        //    Assert.ThrowsException<ArgumentNullException>(() => dataIncomes.Change(new Amount(3200), null, new FreeText("sdef")));
-        //}
 
         [TestMethod]
         public void WhenTheRequiredChangeMethodParamsAreNotValid_ShouldThrowArgumentException()

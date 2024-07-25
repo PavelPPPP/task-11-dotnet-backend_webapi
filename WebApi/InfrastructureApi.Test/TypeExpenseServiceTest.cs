@@ -3,11 +3,6 @@ using InfrastructureApi.Services;
 using Microsoft.EntityFrameworkCore;
 using ModelApi.Services.DataSource;
 using ModelApi.Services.UnitOfWork;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InfrastructureApi.Test
 {

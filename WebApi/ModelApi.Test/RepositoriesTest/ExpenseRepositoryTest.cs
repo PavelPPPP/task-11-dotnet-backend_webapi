@@ -4,11 +4,6 @@ using ModelApi.Interfaces;
 using ModelApi.Services.DataSource;
 using ModelApi.Services.UnitOfWork;
 using ModelApi.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ModelApi.Test.RepositoriesTest
 {
@@ -27,15 +22,6 @@ namespace ModelApi.Test.RepositoriesTest
             _dbContext = new SelfFinanceDbContext(optionsBuilder.Options);
             _unitOfWork = new EFUnitOfWork(_dbContext);
         }
-
-        //[TestMethod]
-        //public void GetNullAllExpenses()
-        //{
-        //    IEnumerable<Expense>? listIncomes = _unitOfWork?.Expenses.GetAll().Result;
-
-        //    Assert.IsNotNull(listIncomes);
-        //    Assert.IsTrue(listIncomes.Count() == 0);
-        //}
 
         [TestMethod]
         public void GetNullExpenseById()
@@ -136,73 +122,5 @@ namespace ModelApi.Test.RepositoriesTest
             Assert.IsNotNull(actual);
             Assert.AreEqual(expected, actual);
         }
-
-        //[TestMethod]
-        //public void GetByYesterdayWithDetail_Test()
-        //{
-        //    int? expectedId = 11;
-        //    int? expectedTypeId = 4;
-        //    string? expectedNameType = "other";
-
-        //    IEnumerable<Expense>? expenses = _unitOfWork?.Expenses.GetByYesterdayWithDetail().Result;
-        //    int? count = expenses?.Count();
-        //    Expense? firstItem = expenses?.FirstOrDefault();
-
-        //    int? actualId = firstItem?.Id;
-        //    int? actualTypeId = firstItem?.TypeId;
-        //    string? actualNameType = firstItem?.TypeExpense?.Name.Value;
-
-        //    Assert.IsNotNull(expenses);
-        //    Assert.IsTrue(count > 0);
-        //    Assert.IsNotNull(firstItem);
-        //    Assert.IsNotNull(firstItem.TypeExpense);
-
-        //    Assert.AreEqual(expectedId, actualId);
-        //    Assert.AreEqual(expectedTypeId, actualTypeId);
-        //    Assert.AreEqual(expectedNameType, actualNameType);
-        //}
-
-        //[TestMethod]
-        //public void GetByPeriodWithDetail_Test()
-        //{
-        //    int? expectedFirstId = 1;
-        //    int? expectedFirstTypeId = 1;
-        //    string? expectedFirstNameType = "communal payments";
-
-        //    int? expectedLastId = 5;
-        //    int? expectedLastTypeId = 4;
-        //    string? expectedLastNameType = "other";
-
-        //    IEnumerable<Expense>? expenses = _unitOfWork?.Expenses.GetByPeriodWithDetail(DateTime.Parse("2024-03-01"), DateTime.Parse("2024-03-31")).Result;
-        //    int? count = expenses?.Count();
-
-        //    Expense? firstItem = expenses?.FirstOrDefault();
-        //    Expense? lastItem = expenses?.LastOrDefault();
-
-        //    int? actualFirstId = firstItem?.Id;
-        //    int? actualFirstTypeId = firstItem?.TypeId;
-        //    string? actualFirstNameType = firstItem?.TypeExpense?.Name.Value;
-
-        //    int? actualLastId = lastItem?.Id;
-        //    int? actualLastTypeId = lastItem?.TypeId;
-        //    string? actualLastNameType = lastItem?.TypeExpense?.Name.Value;
-
-        //    Assert.IsNotNull(expenses);
-        //    Assert.IsTrue(count > 0);
-
-        //    Assert.IsNotNull(firstItem);
-        //    Assert.IsNotNull(firstItem.TypeExpense);
-
-        //    Assert.IsNotNull(lastItem);
-        //    Assert.IsNotNull(lastItem.TypeExpense);
-
-        //    Assert.AreEqual(expectedFirstId, actualFirstId);
-        //    Assert.AreEqual(expectedFirstTypeId, actualFirstTypeId);
-        //    Assert.AreEqual(expectedFirstNameType, actualFirstNameType);
-
-        //    Assert.AreEqual(expectedLastId, actualLastId);
-        //    Assert.AreEqual(expectedLastTypeId, actualLastTypeId);
-        //    Assert.AreEqual(expectedLastNameType, actualLastNameType);
-        //}
     }
 }

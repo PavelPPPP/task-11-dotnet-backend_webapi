@@ -12,7 +12,6 @@ namespace ModelApi.Interfaces
         void Delete(T entity);
 
         Task<IEnumerable<TResult>> GetAllWithProjectionAsync<TResult>(Expression<Func<T, TResult>> selector);
-        //Task<IEnumerable<TResult>> GetFilteredByIdWithProjectionAsync<TResult>(int? id, Expression<Func<T, TResult>> selector);
         Task<TResult?> GetByIdWithProjectionAsync<TResult>(int? id, Expression<Func<T, TResult>> selector);
     }
 }

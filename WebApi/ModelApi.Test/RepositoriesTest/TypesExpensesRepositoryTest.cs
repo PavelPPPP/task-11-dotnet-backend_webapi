@@ -4,11 +4,6 @@ using ModelApi.Interfaces;
 using ModelApi.Services.DataSource;
 using ModelApi.Services.UnitOfWork;
 using ModelApi.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ModelApi.Test.RepositoriesTest
 {

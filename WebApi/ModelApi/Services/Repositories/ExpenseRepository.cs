@@ -2,12 +2,7 @@
 using ModelApi.Entities;
 using ModelApi.Interfaces;
 using ModelApi.Services.DataSource;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ModelApi.Services.Repositories
 {
@@ -49,19 +44,6 @@ namespace ModelApi.Services.Repositories
             return result;
         }
 
-        //public async Task<IEnumerable<TResult>> GetFilteredByIdWithProjectionAsync<TResult>(int? id, Expression<Func<Expense, TResult>> selector)
-        //{
-        //    if (id == null) throw new ArgumentNullException(nameof(id));
-        //    if (selector is null) throw new ArgumentNullException(nameof(selector));
-
-        //    var result = await _dbContext.Expenses
-        //        .Where(ti => ti.Id >= id)
-        //        .Select(selector)
-        //        .ToListAsync();
-
-        //    return result;
-        //}
-
         public async Task<Expense> GetByIdAsync(int? id)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
@@ -97,16 +79,6 @@ namespace ModelApi.Services.Repositories
             return result;
         }
 
-        public async Task<IEnumerable<Expense>> GetByYesterdayWithDetailAsync()
-        {
-            var result = await _dbContext.Expenses
-                .Include(i => i.TypeExpense)
-                .Where(IsYesterdayDay())
-                .ToListAsync();
-
-            return result;
-        }
-
         public async Task<IEnumerable<TResult>> GetByYesterdayWithDetailAndProjectionAsync<TResult>(Expression<Func<Expense, TResult>> selector)
         {
             if (selector is null) throw new ArgumentNullException(nameof(selector));
@@ -125,16 +97,6 @@ namespace ModelApi.Services.Repositories
             var result = await _dbContext.Expenses
                 .Where(IsByPeriod(fromDate, toDate))
                 .SumAsync(i => i.Amount.Value);
-
-            return result;
-        }
-
-        public async Task<IEnumerable<Expense>> GetByPeriodWithDetailAsync(DateTime fromDate, DateTime toDate)
-        {
-            var result = await _dbContext.Expenses
-                .Include(ti => ti.TypeExpense)
-                .Where(IsByPeriod(fromDate, toDate))
-                .ToListAsync();
 
             return result;
         }
