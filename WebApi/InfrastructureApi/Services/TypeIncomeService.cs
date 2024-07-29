@@ -22,18 +22,19 @@ namespace InfrastructureApi.Services
             return typesIncomes;
         }
 
-        public async Task<TypeIncomeDTO> GetByIdAsync(int? id)
+        public async Task<TypeIncomeDTO?> GetByIdAsync(int? id)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
 
             var typeIncome = await _typeIncomeRepository!.GetByIdWithProjectionAsync(id, TypeIncomeDTO.TypeIncomeSelector);
 
-            return typeIncome!;
+            return typeIncome;
         }
 
         public async Task CreateAsync(TypeIncomeDTO typeIncomeDTO)
         {
             if (typeIncomeDTO is null) throw new ArgumentNullException(nameof(typeIncomeDTO));
+            await CheckDuplicateByName(typeIncomeDTO.Name);
 
             var typeIncome = new TypeIncome(new Name(typeIncomeDTO.Name), new FreeText(typeIncomeDTO.Description));
 
@@ -44,8 +45,10 @@ namespace InfrastructureApi.Services
         public async Task UpdateAsync(TypeIncomeDTO typeIncomeDTO)
         {
             if (typeIncomeDTO is null) throw new ArgumentNullException(nameof(typeIncomeDTO));
+            await CheckDuplicateByNameAndNotId(typeIncomeDTO.Id, typeIncomeDTO.Name);
 
-            var typeIncome = await _typeIncomeRepository!.GetByIdAsync(typeIncomeDTO.Id);
+            var typeIncome = await _typeIncomeRepository!.GetByIdAsync(typeIncomeDTO.Id) ?? throw new InvalidOperationException($"Data by id({typeIncomeDTO.Id}) not found!");
+            
             typeIncome.Change(new Name(typeIncomeDTO.Name), new FreeText(typeIncomeDTO.Description));
 
             _typeIncomeRepository.Update(typeIncome);
@@ -56,10 +59,26 @@ namespace InfrastructureApi.Services
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
 
-            var typeIncome = await _typeIncomeRepository!.GetByIdWithDetailAsync(id);
+            var typeIncome = await _typeIncomeRepository!.GetByIdWithDetailAsync(id) ?? throw new InvalidOperationException($"Data by id({id}) not found!");
 
             _typeIncomeRepository.Delete(typeIncome);
             await _unitOfWork!.SaveAsync();
+        }
+
+        private async Task CheckDuplicateByName(string name)
+        {
+            var checkItem = await _typeIncomeRepository!.IsFoundByFilterAsync(typeIncome => typeIncome.Name.Value == name);
+
+            if (!checkItem)
+                throw new InvalidOperationException($"A record with this name - {name} already exists");
+        }
+
+        private async Task CheckDuplicateByNameAndNotId(int? id, string? name)
+        {
+            var checkItem = await _typeIncomeRepository!.IsFoundByFilterAsync(typeIncome => typeIncome.Id != id && typeIncome.Name.Value == name);
+
+            if (!checkItem)
+                throw new InvalidOperationException($"A record with the specified name - {name} already exists");
         }
     }
 }

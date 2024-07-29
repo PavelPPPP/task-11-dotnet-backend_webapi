@@ -1,39 +1,50 @@
 ﻿using InfrastructureApi.DTO;
 using InfrastructureApi.Interfaces;
 
-namespace SelfFinanceApp.CollectionEndpoints.Reports
+namespace SelfFinanceApp.CollectionEndpoints
 {
-    public class DailyReportEndpoint
+    public class ReportEndpoint
     {
-        public string GetReportRoute { get; } = "/api/report/daily";
+        public string GetReportRoute { get; } = "/api/report/toDate/{toDate}";
         public string GetReportByPeriod { get; } = "/api/report/period";
 
-        public DailyReportEndpoint() { }
+        private readonly string warningMsgParsDate = "The date entered is incorrect.";
+        private readonly string warningMsgDateComparison = "The start date of the period must not exceed the end date of the period!";
+
+        public ReportEndpoint() { }
 
         public async Task<object> GetDataReportFuncAsync(
-            IBallanseService<IncomeDTO> incomeService
+            string toDate
+            , IBallanseService<IncomeDTO> incomeService
             , IBallanseService<ExpenseDTO> expenseService
-            , ILogger<DailyReportEndpoint> logger)
+            , ILogger<ReportEndpoint> logger)
         {
+            string endRequestMessage = "End GET request to get data for report by period";
+
             logger.LogInformation("Start GET request to get data for daily report");
 
             double? incomeSum = null;
             double? expenseSum = null;
 
-            var listIncomeOperations = await incomeService.GetByYesterdayAsync();
-            if (listIncomeOperations != null)
+            if (!TryParseDateParam(toDate, out DateTime convertEndDate))
             {
-                incomeSum = await incomeService.GetSumYesterdayAsync();
+                return CallBadRequest(logger, warningMsgParsDate, endRequestMessage);
             }
 
-            var listExpenseOperations = await expenseService.GetByYesterdayAsync();
+            var listIncomeOperations = await incomeService.GetByEnterDateAsync(convertEndDate);
+            if (listIncomeOperations != null)
+            {
+                incomeSum = await incomeService.GetSumByEnterDateAsync(convertEndDate);
+            }
+
+            var listExpenseOperations = await expenseService.GetByEnterDateAsync(convertEndDate);
             if (listExpenseOperations != null)
             {
-                expenseSum = await expenseService.GetSumYesterdayAsync();
+                expenseSum = await expenseService.GetSumByEnterDateAsync(convertEndDate);
             }
-            
-            
-            logger.LogInformation("End GET request to get data for daily report");
+
+
+            logger.LogInformation(endRequestMessage);
 
             return new
             {
@@ -53,7 +64,7 @@ namespace SelfFinanceApp.CollectionEndpoints.Reports
         public async Task<object> GetDataReportByPeriodFuncAsync(
             string startDate
             , IBallanseService<IncomeDTO> incomeService, IBallanseService<ExpenseDTO> expenseService
-            , ILogger<DailyReportEndpoint> logger
+            , ILogger<ReportEndpoint> logger
             , string? endDate = null)
         {
             string endRequestMessage = "End GET request to get data for report by period";
@@ -67,17 +78,21 @@ namespace SelfFinanceApp.CollectionEndpoints.Reports
 
             if (!TryParseDateParam(startDate, out DateTime convertStartDate))
             {
-                return CallBadRequestForFailParsingDate(logger, endRequestMessage);
+                return CallBadRequest(logger, warningMsgParsDate, endRequestMessage);
             }
 
             if (endDate != null)
             {
                 if (!TryParseDateParam(endDate, out convertEndDate))
                 {
-                    return CallBadRequestForFailParsingDate(logger, endRequestMessage);
+                    return CallBadRequest(logger, warningMsgParsDate, endRequestMessage);
+                }
+
+                if (convertStartDate > convertEndDate)
+                {
+                    return CallBadRequest(logger, warningMsgDateComparison, endRequestMessage);
                 }
             }
-
 
             var listIncomeOperations = await incomeService.GetByPeriodAsync(convertStartDate, convertEndDate);
             if (listIncomeOperations != null)
@@ -108,9 +123,8 @@ namespace SelfFinanceApp.CollectionEndpoints.Reports
             };
         }
 
-        private object CallBadRequestForFailParsingDate(ILogger<DailyReportEndpoint> logger, string endRequestMessage)
+        private object CallBadRequest(ILogger<ReportEndpoint> logger, string warningMsg, string endRequestMessage)
         {
-            string warningMsg = "The date entered is incorrect.";
             logger.LogError(warningMsg);
             logger.LogInformation(endRequestMessage);
             return Results.BadRequest(new { message = warningMsg });

@@ -23,38 +23,42 @@ namespace InfrastructureApi.Services
             return expenses;
         }
 
-        public async Task<ExpenseDTO> GetByIdAsync(int? id)
+        public async Task<ExpenseDTO?> GetByIdAsync(int? id)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
 
             var expense = await _expenseRepository!.GetByIdWithProjectionAsync(id, ExpenseDTO.ExpenseSelector);
 
-            return expense!;
+            return expense;
         }
 
-        public async Task<double?> GetSumYesterdayAsync()
+        public async Task<double> GetSumByEnterDateAsync(DateTime toDate)
         {
-            var result = await _expenseRepository!.GetSumYesterdayAsync();
+            double result = await _expenseRepository!.GetSumByEnterDateAsync(toDate) ?? 0;
 
             return result;
         }
 
-        public async Task<double?> GetSumByPeriodAsync(DateTime fromDate, DateTime toDate)
+        public async Task<double> GetSumByPeriodAsync(DateTime fromDate, DateTime toDate)
         {
-            var result = await _expenseRepository!.GetSumByPeriodAsync(fromDate, toDate);
+            CheckDatePeriod(fromDate, toDate);
+
+            double result = await _expenseRepository!.GetSumByPeriodAsync(fromDate, toDate) ?? 0;
 
             return result;
         }
 
-        public async Task<IEnumerable<ExpenseDTO>> GetByYesterdayAsync()
+        public async Task<IEnumerable<ExpenseDTO>> GetByEnterDateAsync(DateTime toDate)
         {
-            var result = await _expenseRepository!.GetByYesterdayWithDetailAndProjectionAsync(ExpenseDTO.ExpenseSelector);
+            var result = await _expenseRepository!.GetByEnterDateWithDetailAndProjectionAsync(toDate, ExpenseDTO.ExpenseSelector);
 
             return result;
         }
 
         public async Task<IEnumerable<ExpenseDTO>> GetByPeriodAsync(DateTime fromDate, DateTime toDate)
         {
+            CheckDatePeriod(fromDate, toDate);
+
             var result = await _expenseRepository!.GetByPeriodWithDetailAndProjectionAsync(fromDate, toDate, ExpenseDTO.ExpenseSelector);
 
             return result;
@@ -74,7 +78,8 @@ namespace InfrastructureApi.Services
         {
             if (expenseDTO is null) throw new ArgumentNullException(nameof(expenseDTO));
 
-            var expense = await _expenseRepository!.GetByIdAsync(expenseDTO.Id);
+            var expense = await _expenseRepository!.GetByIdAsync(expenseDTO.Id) ?? throw new InvalidOperationException($"Data by id({expenseDTO.Id}) not found!");
+
             expense.Change(new Amount(expenseDTO.Amount), expenseDTO.TypeId, new FreeText(expenseDTO.Comments));
 
             _expenseRepository.Update(expense);
@@ -85,10 +90,16 @@ namespace InfrastructureApi.Services
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
 
-            var expense = await _expenseRepository!.GetByIdAsync(id);
+            var expense = await _expenseRepository!.GetByIdAsync(id) ?? throw new InvalidOperationException($"Data by id({id}) not found!"); ;
 
             _expenseRepository.Delete(expense);
             await _unitOfWork!.SaveAsync();
+        }
+
+        private void CheckDatePeriod(DateTime fromDate, DateTime toDate)
+        {
+            string errMsgArg = "The start date of the period must not exceed the end date of the period!";
+            if (fromDate > toDate) throw new ArgumentException(errMsgArg, nameof(fromDate));
         }
     }
 }

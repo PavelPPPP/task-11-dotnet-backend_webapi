@@ -600,18 +600,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/400_IncorrectDate'
-              example:
-                message: The date entered is incorrect.
+              examples:
+                IncorrectDate:
+                  value:
+                    message: The date entered is incorrect.
+                DateComparisonError:
+                  value:
+                    message: The start date of the period must not exceed the end date of the period!
         default:
           $ref: '#/components/responses/UnexpectedError'
                 
-  /api/report/daily:
+  /api/report/toDate/{toDate}:
     get:
       tags:
         - report
-      summary: Get report daily
-      description: Get report daily
-      operationId: getReportDaily
+      summary: Get report by enter date
+      description: Get report by enter date
+      operationId: getReportByEnterDate
+      parameters:
+        - $ref: '#/components/parameters/toDate'
       responses:
         200:
           description: Succesful response
@@ -621,7 +628,17 @@ paths:
                 $ref: '#/components/schemas/Report'
               examples:
                 Report:
-                  $ref: '#/components/examples/ReportDaily'
+                  $ref: '#/components/examples/ReportByEnterDate'
+        400:
+          description: Incorrect input date
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400_IncorrectDate'
+              examples:
+                IncorrectDate:
+                  value:
+                    message: The date entered is incorrect.
         default:
           $ref: '#/components/responses/UnexpectedError'
 
@@ -664,6 +681,14 @@ components:
       schema:
         type: string
       example: 20240331
+    toDate:
+      name: toDate
+      in: path
+      description: To entered date for report
+      required: true
+      schema:
+        type: string
+      example: 20240724  
         
   schemas:
     Incomes:
@@ -1113,7 +1138,7 @@ components:
               createDate: 2024-03-17T00:00:00
               updateDate: 2024-03-17T00:00:00
               
-    ReportDaily:
+    ReportByEnterDate:
       value:
         incomeReport:
           incomeSum: 2000

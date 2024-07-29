@@ -1,16 +1,16 @@
-﻿using SelfFinanceApp.CollectionEndpoints.Reports;
+﻿using SelfFinanceApp.CollectionEndpoints;
 
 namespace SelfFinanceApp.ServicesEndpoints
 {
     public class DailyReportEndpointService
     {
         private WebApplication? _app;
-        private DailyReportEndpoint _endpoint;
+        private ReportEndpoint _endpoint;
 
         public DailyReportEndpointService(WebApplication? app)
         {
             _app = app;
-            _endpoint = new DailyReportEndpoint();
+            _endpoint = new ReportEndpoint();
         }
 
         public void Map()

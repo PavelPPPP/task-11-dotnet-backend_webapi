@@ -120,5 +120,14 @@ namespace ModelApi.Services.Repositories
 
             _dbContext.TypesIncomes.Remove(typesIncomes);
         }
+
+        public async Task<bool> IsFoundByFilterAsync(Expression<Func<TypeIncome, bool>> predicate)
+        {
+            var result = await _dbContext.TypesIncomes
+                .Where(predicate)
+                .FirstOrDefaultAsync();
+
+            return result is null;
+        }
     }
 }

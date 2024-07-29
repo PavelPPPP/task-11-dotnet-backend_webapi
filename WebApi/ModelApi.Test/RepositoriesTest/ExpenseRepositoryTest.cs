@@ -102,11 +102,11 @@ namespace ModelApi.Test.RepositoriesTest
         }
 
         [TestMethod]
-        public void GetSymYesterday_Test()
+        public void GetSymByEnterDate_Test()
         {
-            double? expected = 1000;
+            double? expected = 2000;
 
-            double? actual = _unitOfWork?.Expenses.GetSumYesterdayAsync().Result;
+            double? actual = _unitOfWork?.Expenses.GetSumByEnterDateAsync(DateTime.Parse("2024-07-24")).Result;
 
             Assert.IsNotNull(actual);
             Assert.AreEqual(expected, actual);

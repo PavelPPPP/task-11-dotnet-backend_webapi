@@ -68,24 +68,22 @@ namespace ModelApi.Services.Repositories
             return result;
         }
 
-        public async Task<double?> GetSumYesterdayAsync()
+        public async Task<double?> GetSumByEnterDateAsync(DateTime toDate)
         {
-            DateTime dateNow = DateTime.Now;
-
             var result = await _dbContext.Expenses
-                .Where(IsYesterdayDay())
+                .Where(IsByEnteredDate(toDate))
                 .SumAsync(i => i.Amount.Value);
 
             return result;
         }
 
-        public async Task<IEnumerable<TResult>> GetByYesterdayWithDetailAndProjectionAsync<TResult>(Expression<Func<Expense, TResult>> selector)
+        public async Task<IEnumerable<TResult>> GetByEnterDateWithDetailAndProjectionAsync<TResult>(DateTime toDate, Expression<Func<Expense, TResult>> selector)
         {
             if (selector is null) throw new ArgumentNullException(nameof(selector));
 
             var result = await _dbContext.Expenses
                 .Include(i => i.TypeExpense)
-                .Where(IsYesterdayDay())
+                .Where(IsByEnteredDate(toDate))
                 .Select(selector)
                 .ToListAsync();
 
@@ -144,11 +142,11 @@ namespace ModelApi.Services.Repositories
             _dbContext.Expenses.Remove(expense);
         }
 
-        private Expression<Func<Expense, bool>> IsYesterdayDay()
+        private Expression<Func<Expense, bool>> IsByEnteredDate(DateTime toDate)
         {
-            return (i) => i.CreateDate.Value.Year == DateTime.Now.Year
-                && i.CreateDate.Value.Month == DateTime.Now.Month
-                && i.CreateDate.Value.Day == (DateTime.Now.Day - 1);
+            return (i) => i.CreateDate.Value.Year == toDate.Year
+                && i.CreateDate.Value.Month == toDate.Month
+                && i.CreateDate.Value.Day == toDate.Day;
         }
 
         private Expression<Func<Expense, bool>> IsByPeriod(DateTime fromDate, DateTime toDate)

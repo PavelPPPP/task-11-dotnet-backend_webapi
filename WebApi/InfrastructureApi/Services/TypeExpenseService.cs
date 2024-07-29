@@ -22,18 +22,19 @@ namespace InfrastructureApi.Services
             return typesExpenses;
         }
 
-        public async Task<TypeExpenseDTO> GetByIdAsync(int? id)
+        public async Task<TypeExpenseDTO?> GetByIdAsync(int? id)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
 
             var typeExpense = await _typeExpenseRepository!.GetByIdWithProjectionAsync(id, TypeExpenseDTO.TypeExpenseSelector);
 
-            return typeExpense!;
+            return typeExpense;
         }
 
         public async Task CreateAsync(TypeExpenseDTO typeExpenseDTO)
         {
             if (typeExpenseDTO is null) throw new ArgumentNullException(nameof(typeExpenseDTO));
+            await CheckDuplicateByName(typeExpenseDTO.Name);
 
             var typeExpense = new TypeExpense(new Name(typeExpenseDTO.Name), new FreeText(typeExpenseDTO.Description));
 
@@ -45,7 +46,8 @@ namespace InfrastructureApi.Services
         {
             if (typeExpenseDTO is null) throw new ArgumentNullException(nameof(typeExpenseDTO));
 
-            var typeExpense = await _typeExpenseRepository!.GetByIdAsync(typeExpenseDTO.Id);
+            var typeExpense = await _typeExpenseRepository!.GetByIdAsync(typeExpenseDTO.Id) ?? throw new InvalidOperationException($"Data by id({typeExpenseDTO.Id}) not found!");
+            await CheckDuplicateByNameAndNotId(typeExpenseDTO.Id, typeExpenseDTO.Name);
             typeExpense.Change(new Name(typeExpenseDTO.Name), new FreeText(typeExpenseDTO.Description));
 
             _typeExpenseRepository.Update(typeExpense);
@@ -56,10 +58,26 @@ namespace InfrastructureApi.Services
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
 
-            var typeExpense = await _typeExpenseRepository!.GetByIdWithDetailAsync(id);
+            var typeExpense = await _typeExpenseRepository!.GetByIdWithDetailAsync(id) ?? throw new InvalidOperationException($"Data by id({id}) not found!");
 
             _typeExpenseRepository.Delete(typeExpense);
             await _unitOfWork!.SaveAsync();
+        }
+
+        private async Task CheckDuplicateByName(string name)
+        {
+            var checkItem = await _typeExpenseRepository!.IsFoundByFilterAsync(typeExpense => typeExpense.Name.Value == name);
+
+            if (!checkItem)
+                throw new InvalidOperationException($"A record with this name - {name} already exists");
+        }
+
+        private async Task CheckDuplicateByNameAndNotId(int? id, string? name)
+        {
+            var checkItem = await _typeExpenseRepository!.IsFoundByFilterAsync(typeExpense => typeExpense.Id != id && typeExpense.Name.Value == name);
+
+            if (!checkItem)
+                throw new InvalidOperationException($"A record with the specified name - {name} already exists");
         }
     }
 }

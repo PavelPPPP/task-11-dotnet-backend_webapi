@@ -55,11 +55,11 @@ namespace InfrastructureApi.Test
         }
 
         [TestMethod]
-        public void GetSumYesterdayAsync_ReturnSumAmount()
+        public void GetSumByEnterDateAsync_ReturnSumAmount()
         {
             double expectedSumAmount = 2000;
 
-            var actualSumAmount = _service?.GetSumYesterdayAsync().Result;
+            var actualSumAmount = _service?.GetSumByEnterDateAsync(DateTime.Parse("2024-07-24")).Result;
 
             Assert.IsNotNull(actualSumAmount);
             Assert.AreEqual(expectedSumAmount, actualSumAmount);
@@ -79,12 +79,12 @@ namespace InfrastructureApi.Test
         }
 
         [TestMethod]
-        public void GetByYesterdayAsync_ReturnObjectIEnumerableOfIncomeDTO()
+        public void GetByEnterDateAsync_ReturnObjectIEnumerableOfIncomeDTO()
         {
             int expectedFirsId = 17;
             int expectedLastId = 18;
 
-            var listIncomeDTO = _service?.GetByYesterdayAsync().Result;
+            var listIncomeDTO = _service?.GetByEnterDateAsync(DateTime.Parse("2024-07-24")).Result;
             var firstIncomeDTO = listIncomeDTO?.FirstOrDefault();
             var lastIncomeDTO = listIncomeDTO?.LastOrDefault();
 

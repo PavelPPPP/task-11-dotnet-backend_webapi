@@ -109,5 +109,14 @@ namespace ModelApi.Services.Repositories
 
             _dbContext.TypesExpenses.Remove(typesExpenses);
         }
+
+        public async Task<bool> IsFoundByFilterAsync(Expression<Func<TypeExpense, bool>> predicate)
+        {
+            var result = await _dbContext.TypesExpenses
+                .Where(predicate)
+                .FirstOrDefaultAsync();
+
+            return result is null;
+        }
     }
 }

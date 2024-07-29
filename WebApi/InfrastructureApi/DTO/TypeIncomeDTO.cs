@@ -14,7 +14,7 @@ namespace InfrastructureApi.DTO
                 return typeIncome => new TypeIncomeDTO()
                 {
                     Id = typeIncome.Id,
-                    Name = typeIncome.Name.Value,
+                    Name = typeIncome.Name.Value!,
                     Description = typeIncome.Description!.Value,
                     CreateDate = typeIncome.CreateDate.Value,
                     UpdateDate = typeIncome.UpdateDate!.Value

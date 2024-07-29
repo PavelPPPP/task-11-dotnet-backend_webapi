@@ -7,12 +7,13 @@ namespace SelfFinanceApp.CollectionEndpoints
     public class EntityEndpoints<TypeDTO> 
         where TypeDTO : BaseEntityDTO
     {
-        private string _nameTypeEntity = String.Empty;
-        private string _lowerNameTypeEntity = String.Empty;
         public string GetAllRoute { get; }
         public string GetOrDeleteByIdRoute { get; }
         public string PostAddRoute { get; }
         public string PutEditRoute { get; }
+
+        private string _nameTypeEntity = String.Empty;
+        private string _lowerNameTypeEntity = String.Empty;
 
         public EntityEndpoints()
         {
@@ -50,17 +51,14 @@ namespace SelfFinanceApp.CollectionEndpoints
             return listResult;
         }
 
-        public async Task<object> GetByIdFunc(int id, IEntityService<TypeDTO> incomeService, ILogger<EntityEndpoints<TypeDTO>> logger)
+        public async Task<object?> GetByIdFunc(int id, IEntityService<TypeDTO> incomeService, ILogger<EntityEndpoints<TypeDTO>> logger)
         {
             logger.LogInformation($"Start GET request to get by id {_nameTypeEntity}");
             string endRequestMsgLog = $"End GET request to get by id {_nameTypeEntity}";
             var income = await incomeService.GetByIdAsync(id);
             if (income is null)
             {
-                string warningMsg = $"{_nameTypeEntity} not found";
-                logger.LogWarning(warningMsg);
-                logger.LogInformation(endRequestMsgLog);
-                return Results.NotFound(new { message = warningMsg });
+                CallNotFoundRequest(logger, endRequestMsgLog);
             }
 
             logger.LogInformation(endRequestMsgLog);
@@ -76,33 +74,44 @@ namespace SelfFinanceApp.CollectionEndpoints
             return new { message = $"{_nameTypeEntity} added successed!" };
         }
 
-        public async Task<TypeDTO> PutEditFunc(TypeDTO income, IEntityService<TypeDTO> incomeService, ILogger<EntityEndpoints<TypeDTO>> logger)
+        public async Task<object?> PutEditFunc(TypeDTO income, IEntityService<TypeDTO> incomeService, ILogger<EntityEndpoints<TypeDTO>> logger)
         {
             logger.LogInformation($"Start PUT request to edit exists {_nameTypeEntity}");
+            string endRequestMsgLog = $"End DELETE request to remove exists {_nameTypeEntity}";
             await incomeService.UpdateAsync(income);
 
             var editedEntity = await incomeService.GetByIdAsync(income.Id);
+            if (income is null)
+            {
+                CallNotFoundRequest(logger, endRequestMsgLog);
+            }
             logger.LogInformation($"End PUT request to edit exists {_nameTypeEntity}");
             return editedEntity;
         }
 
-        public async Task<object> DeleteFunc(int id, IEntityService<TypeDTO> incomeService, ILogger<EntityEndpoints<TypeDTO>> logger)
+        public async Task<object?> DeleteFunc(int id, IEntityService<TypeDTO> incomeService, ILogger<EntityEndpoints<TypeDTO>> logger)
         {
             logger.LogInformation($"Start DELETE request to remove exists {_nameTypeEntity}");
             string endRequestMsgLog = $"End DELETE request to remove exists {_nameTypeEntity}";
             var income = await incomeService.GetByIdAsync(id);
             if (income is null)
             {
-                string warningMsg = $"{_nameTypeEntity} not found";
-                logger.LogWarning(warningMsg);
-                logger.LogInformation(endRequestMsgLog);
-                return Results.NotFound(new { message = warningMsg });
+                CallNotFoundRequest(logger, endRequestMsgLog);
             }
 
             await incomeService.DeleteAsync(id);
 
             logger.LogInformation(endRequestMsgLog);
             return income;
+        }
+
+        private object CallNotFoundRequest(ILogger<EntityEndpoints<TypeDTO>> logger, string endRequestMessage, string warningMsg = "")
+        {
+            if (warningMsg == "") warningMsg = $"{_nameTypeEntity} not found";
+
+            logger.LogError(warningMsg);
+            logger.LogInformation(endRequestMessage);
+            return Results.NotFound(new { message = warningMsg });
         }
     }
 }
