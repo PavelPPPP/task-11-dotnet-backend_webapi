@@ -1,0 +1,33 @@
+﻿@page "/typesIncomes/{currentPage:int=1}"
+
+@using InfrastructureApi.DTO
+@using SelfFinanceApp.Components.DataGrid
+@using SelfFinanceApp.Components.Layout
+
+@rendermode RenderMode.InteractiveServer
+
+@if (_typesIncomes == null) {
+     <SpinnerLoading />
+}
+else
+{
+    <BaseDataGrid TDataItem="TypeIncomeDTO"
+                  Items="@_typesIncomes"
+                  PageTitle="Types Incomes"
+                  CurrentPage="@CurrentPage"
+                  RequestUriForLoadData="@_requestUriForLoad"
+                  UriAddPageItem="@_uriAddPageItem"
+                  UriEditPageItem="@((item) => $"{_uriBaseEditPageItem}{item.Id}")"
+                  RequestUriForDeleteItem="@((item) => $"{_requestUriForDeleteItem}{item.Id}")">
+        <HeaderColumnsTemplate>
+            <th scope="col">Name</th>
+            <th scope="col">Date</th>
+            <th scope="col">Time</th>
+        </HeaderColumnsTemplate>
+        <ColumnsTemplate>
+            <td>@context.Name</td>
+            <td>@context.CreateDate!.Value.ToShortDateString()</td>
+            <td>@context.CreateDate!.Value.ToLongTimeString()</td>
+        </ColumnsTemplate>
+    </BaseDataGrid>
+}

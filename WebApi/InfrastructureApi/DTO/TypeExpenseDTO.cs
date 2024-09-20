@@ -14,7 +14,7 @@ namespace InfrastructureApi.DTO
                 return typeExpense => new TypeExpenseDTO()
                 {
                     Id = typeExpense.Id,
-                    Name = typeExpense.Name.Value,
+                    Name = typeExpense.Name.Value!,
                     Description = typeExpense.Description!.Value,
                     CreateDate = typeExpense.CreateDate.Value,
                     UpdateDate = typeExpense.UpdateDate!.Value

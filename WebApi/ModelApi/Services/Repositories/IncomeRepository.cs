@@ -94,7 +94,7 @@ namespace ModelApi.Services.Repositories
         {
             var result = await _dbContext.Incomes
                 .Where(IsByPeriod(fromDate, toDate))
-                .SumAsync (i => i.Amount.Value);
+                .SumAsync(i => i.Amount.Value);
 
             return result;
         }
@@ -144,19 +144,13 @@ namespace ModelApi.Services.Repositories
 
         private Expression<Func<Income, bool>> IsByEnteredDate(DateTime toDate)
         {
-            return (i) => i.CreateDate.Value.Year == toDate.Year
-                && i.CreateDate.Value.Month == toDate.Month
-                && i.CreateDate.Value.Day == toDate.Day;
+            return i => i.CreateDate.Value.Date == toDate;
         }
 
         private Expression<Func<Income, bool>> IsByPeriod(DateTime fromDate, DateTime toDate)
         {
-            return i => i.CreateDate.Value.Year >= fromDate.Year
-                && i.CreateDate.Value.Month >= fromDate.Month
-                && i.CreateDate.Value.Day >= fromDate.Day
-                && i.CreateDate.Value.Year <= toDate.Year
-                && i.CreateDate.Value.Month <= toDate.Month
-                && i.CreateDate.Value.Day <= toDate.Day;
+            return i => i.CreateDate.Value.Date >= fromDate
+                && i.CreateDate.Value.Date <= toDate;
         }
     }
 }

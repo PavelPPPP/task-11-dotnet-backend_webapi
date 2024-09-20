@@ -1,0 +1,39 @@
+﻿@page "/expenses/{currentPage:int=1}"
+@using InfrastructureApi.DTO
+@using SelfFinanceApp.Components.DataGrid
+@using SelfFinanceApp.Components.Layout
+
+@rendermode RenderMode.InteractiveServer
+
+@if (_expenses == null)
+{
+    <SpinnerLoading />
+}
+else
+{
+    <BaseDataGrid TDataItem="ExpenseDTO"
+                  Items="@_expenses"
+                  PageTitle="Expenses"
+                  CurrentPage="@CurrentPage"
+                  RequestUriForLoadData="@_requestUriForLoad"
+                  UriAddPageItem="@_uriAddPageItem"
+                  UriEditPageItem="@((item) => $"{_uriBaseEditPageItem}{item.Id}")"
+                  RequestUriForDeleteItem="@((item) => $"{_requestUriForDeleteItem}{item.Id}")">
+        <HeaderColumnsTemplate>
+            <th scope="col">Name Expense</th>
+            <th scope="col">Date</th>
+            <th scope="col">Time</th>
+            <th scope="col">Amount</th>
+        </HeaderColumnsTemplate>
+        <ColumnsTemplate>
+            <td>@context.TypeExpense!.Name</td>
+            <td>@context.CreateDate!.Value.ToShortDateString()</td>
+            <td>@context.CreateDate!.Value.ToLongTimeString()</td>
+            <td>@context.Amount!.Value</td>
+        </ColumnsTemplate>
+    </BaseDataGrid>
+}
+
+@code {
+
+}

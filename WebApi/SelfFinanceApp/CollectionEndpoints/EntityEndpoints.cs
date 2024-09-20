@@ -58,7 +58,7 @@ namespace SelfFinanceApp.CollectionEndpoints
             var income = await incomeService.GetByIdAsync(id);
             if (income is null)
             {
-                CallNotFoundRequest(logger, endRequestMsgLog);
+                return Results.NotFound(NotFoundObjectRequest(logger, endRequestMsgLog));
             }
 
             logger.LogInformation(endRequestMsgLog);
@@ -77,15 +77,15 @@ namespace SelfFinanceApp.CollectionEndpoints
         public async Task<object?> PutEditFunc(TypeDTO income, IEntityService<TypeDTO> incomeService, ILogger<EntityEndpoints<TypeDTO>> logger)
         {
             logger.LogInformation($"Start PUT request to edit exists {_nameTypeEntity}");
-            string endRequestMsgLog = $"End DELETE request to remove exists {_nameTypeEntity}";
+            string endRequestMsgLog = $"End PUT request to remove exists {_nameTypeEntity}";
             await incomeService.UpdateAsync(income);
 
             var editedEntity = await incomeService.GetByIdAsync(income.Id);
             if (income is null)
             {
-                CallNotFoundRequest(logger, endRequestMsgLog);
+                return Results.NotFound(NotFoundObjectRequest(logger, endRequestMsgLog));
             }
-            logger.LogInformation($"End PUT request to edit exists {_nameTypeEntity}");
+            logger.LogInformation(endRequestMsgLog);
             return editedEntity;
         }
 
@@ -96,7 +96,7 @@ namespace SelfFinanceApp.CollectionEndpoints
             var income = await incomeService.GetByIdAsync(id);
             if (income is null)
             {
-                CallNotFoundRequest(logger, endRequestMsgLog);
+                return Results.NotFound(NotFoundObjectRequest(logger, endRequestMsgLog));
             }
 
             await incomeService.DeleteAsync(id);
@@ -105,13 +105,14 @@ namespace SelfFinanceApp.CollectionEndpoints
             return income;
         }
 
-        private object CallNotFoundRequest(ILogger<EntityEndpoints<TypeDTO>> logger, string endRequestMessage, string warningMsg = "")
+        private object NotFoundObjectRequest(ILogger<EntityEndpoints<TypeDTO>> logger, string endRequestMessage, string warningMsg = "")
         {
             if (warningMsg == "") warningMsg = $"{_nameTypeEntity} not found";
 
             logger.LogError(warningMsg);
             logger.LogInformation(endRequestMessage);
-            return Results.NotFound(new { message = warningMsg });
+
+            return new { message = warningMsg };
         }
     }
 }

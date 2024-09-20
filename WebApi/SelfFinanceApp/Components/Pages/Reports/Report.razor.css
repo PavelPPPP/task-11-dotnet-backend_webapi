@@ -1,0 +1,19 @@
+﻿.report__valid__list {
+    color: red;
+}
+
+.report__valid__list_enable {
+    display: block;
+}
+
+.report__valid__list_disable {
+    display: none;
+}
+
+::deep .report__valid__input_ok {
+    border-color: green;
+}
+
+::deep .report__valid__input_wrong {
+    border-color: red;
+}

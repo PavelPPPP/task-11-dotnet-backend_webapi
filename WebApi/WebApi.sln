@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InfrastructureApi", "Infras
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InfrastructureApi.Test", "InfrastructureApi.Test\InfrastructureApi.Test.csproj", "{2DB74B3A-76EB-4570-AD85-FFF6945BEE80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfFinanceApp", "SelfFinanceApp\SelfFinanceApp.csproj", "{74C48235-DA68-4E57-84F1-F6F4C3BACF65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfFinanceApp", "SelfFinanceApp\SelfFinanceApp.csproj", "{74C48235-DA68-4E57-84F1-F6F4C3BACF65}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

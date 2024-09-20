@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using SelfFinanceApp.ServicesEndpoints;
 using SelfFinanceApp.Providers;
 using Serilog;
+using SelfFinanceApp.Components;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -16,22 +17,34 @@ try
         .ReadFrom.Configuration(builder.Configuration)
         .ReadFrom.Services(services));
 
+    builder.Services.AddRazorComponents()
+        .AddInteractiveServerComponents();
+    builder.Services.AddHttpClient();
+
     builder.Services.AddSelfFinanceDbContext(connection);
     builder.Services.AddEfUnitOfWorkService();
     builder.Services.AddSelfFinanceEntityServices();
+    builder.Services.AddRouteHistoryService();
 
     var app = builder.Build();
+
     var apiService = new ApiService(app);
 
+    app.UseStaticFiles();
     app.UseSerilogRequestLogging();
+
+    
+    app.UseAntiforgery();
 
     app.UseExceptionHandler(app => app.Run(async context =>
     {
         await context.Response.WriteAsJsonAsync(new { code = context.Response.StatusCode, message = "Unexpected error!\nPlease contact the site administrator to clarify the problem." });
     }));
-    apiService.MapApi();
 
-    app.MapGet("/", () => "Hello World!");
+    app.MapRazorComponents<App>()
+        .AddInteractiveServerRenderMode();
+
+    apiService.MapApi();
 
     await app.RunAsync();
 

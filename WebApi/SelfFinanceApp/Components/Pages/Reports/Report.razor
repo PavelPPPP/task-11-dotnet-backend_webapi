@@ -1,0 +1,124 @@
+﻿@page "/report"
+@using Microsoft.AspNetCore.Components.Rendering
+@using SelfFinanceApp.Components.Layout
+
+@rendermode RenderMode.InteractiveServer
+
+@inject IHttpClientFactory ClientFactory
+@inject IConfiguration AppConfig
+
+<h3>Report</h3>
+
+<p>
+    <label for="typeReport">Type Report:
+        <InputSelect DisplayName="Type Report" id="typeReport" class="form-select" @bind-Value="_selectedTypeReport">
+            <option value="@TypeReportEnum.ToDate" selected>To Date</option>
+            <option value="@TypeReportEnum.ByPeriod">By Period</option>
+        </InputSelect>
+    </label>
+</p>
+
+@if (_selectedTypeReport == TypeReportEnum.ToDate)
+{
+    <p>
+        <label for="inputToDate">Date:
+            <InputDate DisplayName="Select Date" id="inputToDate" class="form-control" @bind-Value="_inputedToDate"></InputDate>
+        </label>
+    </p>
+}
+else
+{
+    <h6>Period Date</h6>
+    <ul class="@_classEnableValidMsg">
+        <li>@_msgWrongValidInputPeriodDate</li>
+    </ul>
+    <p>
+        <label for="inputFromDate">From:
+            <InputDate DisplayName="Select From Date" id="inputFromDate" @bind-class=_classesValid @bind-Value="_inputedFromDate" @bind-Value:after="OnChangeFieldPeriodDate"></InputDate>
+        </label>
+        
+        <label for="inputToDate">To:
+            <InputDate DisplayName="Select To Date" id="inputToDate" @bind-class=_classesValid @bind-Value="_inputedToDate" @bind-Value:after="OnChangeFieldPeriodDate"></InputDate>
+        </label>
+        
+    </p>
+}
+<p>
+    <button class="btn btn-primary" @onclick=RunReport>Report</button>
+    <button class="btn btn-primary" @onclick="(()=>Reset())">Reset</button>
+</p>
+
+@_incomeReportContent
+@_expenseReportContent
+
+@code {
+    private void RenderIncomeReportContent(RenderTreeBuilder __builder)
+    {
+        if (_report is null)
+        {
+            <SpinnerLoading />
+        }
+        else
+        {
+            <div>
+                <h5>Incomes</h5>
+                <p>Total income: @_report.IncomeReport?.IncomeSum</p>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Type Income</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Date operation</th>
+                            <th scope="col">Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in _report.IncomeReport?.ListIncomeOperations!)
+                        {
+                            <tr>
+                                <td>@item.TypeIncome?.Name</td>
+                                <td>@item.Amount</td>
+                                <td>@item.CreateDate.ToString()</td>
+                                <td>@item.Comments</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    }
+
+    private void RenderExpenseReportContent(RenderTreeBuilder __builder)
+    {
+        if (_report is not null)
+        {
+            <div>
+                <h5>Expenses</h5>
+                <p>Total expense: @_report.ExpenseReport?.ExpenseSum</p>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Type Expense</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Date operation</th>
+                            <th scope="col">Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in _report.ExpenseReport?.ListExpenseOperations!)
+                        {
+                            <tr>
+                                <td>@item.TypeExpense?.Name</td>
+                                <td>@item.Amount</td>
+                                <td>@item.CreateDate.ToString()</td>
+                                <td>@item.Comments</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    }
+}

@@ -18,7 +18,12 @@ namespace InfrastructureApi.DTO
                     CreateDate = income.CreateDate.Value,
                     UpdateDate = income.UpdateDate!.Value,
                     TypeId = income.TypeId,
-                    Comments = income.Comments!.Value
+                    Comments = income.Comments!.Value,
+                    TypeIncome = new TypeIncomeDTO()
+                    {
+                        Id = income.TypeIncome!.Id,
+                        Name = income.TypeIncome.Name.Value!
+                    }
                 };
             }
         }

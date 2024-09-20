@@ -18,7 +18,12 @@ namespace InfrastructureApi.DTO
                     CreateDate = expense.CreateDate.Value,
                     UpdateDate = expense.UpdateDate!.Value,
                     TypeId = expense.TypeId,
-                    Comments = expense.Comments!.Value
+                    Comments = expense.Comments!.Value,
+                    TypeExpense = new TypeExpenseDTO()
+                    {
+                        Id = expense.TypeExpense!.Id,
+                        Name = expense.TypeExpense.Name.Value!
+                    }
                 };
             }
         }

@@ -1,0 +1,22 @@
+﻿@using InfrastructureApi.DTO
+@using Microsoft.AspNetCore.Components.Rendering
+@using SelfFinanceApp.Components.Pages.BaseEditForm
+
+@inherits BaseEditFormItem<TypeIncomeDTO>
+@{
+    base.BuildRenderTree(__builder);
+}
+
+@code {
+    protected internal override void RenderInputComponentsForm(RenderTreeBuilder __builder)
+    {
+        <p>
+            <label for="typeName" class="form-label">Type name:</label>
+            <InputText DisplayName="Type Name" class="form-control" id="typeName" @bind-Value="itemEdited.Name" />
+        </p>
+        <p>
+            <label for="description" class="form-label">Description:</label>
+            <InputTextArea DisplayName="Description" class="form-control" id="description" @bind-Value="itemEdited.Description" />
+        </p>
+    }
+}

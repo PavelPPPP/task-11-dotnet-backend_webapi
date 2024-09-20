@@ -1,0 +1,51 @@
+﻿@rendermode RenderMode.InteractiveServer
+
+@if (_totalPages != 0)
+{
+    <div class="row">
+        <nav class="col" aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item @SetDisabledClassForPrevBtn()"><a class="page-link" href="@GetUriPage(1)"><span aria-hidden="true">&laquo;</span></a></li>
+                <li class="page-item @SetDisabledClassForPrevBtn()"><a class="page-link" href="@GetUriPage(CurrentPage-1)">Previous</a></li>
+                @for (int i = GetFromNumberIteration(); i <= GetToNumberIteration(); i++)
+                {
+                    if (i > _totalPages)
+                        break;
+
+                    if (i == GetToNumberIteration())
+                    {
+                        <li class="page-item @SetActiveClassItemPage(i)"><a class="page-link" href="@GetUriPage(i)">...</a></li>
+                        break;
+                    }
+
+                    if (i != 1 && i == GetFromNumberIteration())
+                    {
+                        <li class="page-item @SetActiveClassItemPage(i)"><a class="page-link" href="@GetUriPage(i)">...</a></li>
+                        continue;
+                    }
+
+                    <li class="page-item @SetActiveClassItemPage(i)"><a class="page-link" href="@GetUriPage(i)">@i</a></li>
+                }
+                <li class="page-item @SetDisabledClassForNextBtn()"><a class="page-link" href="@GetUriPage(CurrentPage+1)">Next</a></li>
+                <li class="page-item @SetDisabledClassForNextBtn()"><a class="page-link" href="@GetUriPage(_totalPages)"><span aria-hidden="true">&raquo;</span></a></li>
+            </ul>
+        </nav>
+
+        <div class="col">
+            <div class="row text-center">
+                <div class="col-3">
+                    <div style="padding-top:7px">Size page items:</div>
+                </div>
+                <div class="col-2">
+                    <select class="form-select" @onchange="ChangePageSize" aria-label="Page size select">
+                        <option selected value="@PageSizes[0]">@PageSizes[0]</option>
+                        @for (int i = 1; i < PageSizes.Count(); i++)
+                        {
+                            <option value="@PageSizes[i]">@PageSizes[i]</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+}

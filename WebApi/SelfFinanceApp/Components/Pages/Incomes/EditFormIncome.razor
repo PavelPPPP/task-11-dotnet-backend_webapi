@@ -1,0 +1,31 @@
+﻿@using InfrastructureApi.DTO
+@using Microsoft.AspNetCore.Components.Rendering
+@using SelfFinanceApp.Components.Pages.BaseEditForm
+@inherits BaseEditFormItem<IncomeDTO>
+@{
+    base.BuildRenderTree(__builder);
+}
+
+@code {
+    protected internal override void RenderInputComponentsForm(RenderTreeBuilder __builder)
+    {
+        <p>
+            <label for="typeIdSelected" class="form-label">Types:</label>
+            <InputSelect DisplayName="Types Incomes" id="typeIdSelected" class="form-select" @bind-Value="itemEdited.TypeId">
+                <option value="">--none--</option>
+                @foreach (var typeIncome in typesIncomes!)
+                {
+                    <option value="@typeIncome.Id">@typeIncome.Name</option>
+                }
+            </InputSelect>
+        </p>
+        <p>
+            <label for="amount" class="form-label">Amount:</label>
+            <InputNumber DisplayName="Amount" class="form-control" id="amount" @bind-Value="itemEdited.Amount" />
+        </p>
+        <p>
+            <label for="comments" class="form-label">Comments:</label>
+            <InputTextArea DisplayName="Comments" class="form-control" id="comments" @bind-Value="itemEdited.Comments" />
+        </p>
+    }
+}
