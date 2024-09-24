@@ -15,11 +15,11 @@ namespace SelfFinanceApp.ServicesEndpoints
 
         public void Map()
         {
-            _app?.MapGet(_entityEndpoints.GetAllRoute, _entityEndpoints.GetAllFunc);
-            _app?.MapGet(_entityEndpoints.GetOrDeleteByIdRoute, _entityEndpoints.GetByIdFunc);
-            _app?.MapPost(_entityEndpoints.PostAddRoute, _entityEndpoints.PostAddFunc);
-            _app?.MapPut(_entityEndpoints.PutEditRoute, _entityEndpoints.PutEditFunc);
-            _app?.MapDelete(_entityEndpoints.GetOrDeleteByIdRoute, _entityEndpoints.DeleteFunc);
+            _app?.MapGet(_entityEndpoints.GetAllAndPostRoute, _entityEndpoints.GetAllFunc);
+            _app?.MapGet(_entityEndpoints.GetAndEditAndDeleteByIdRoute, _entityEndpoints.GetByIdFunc);
+            _app?.MapPost(_entityEndpoints.GetAllAndPostRoute, _entityEndpoints.PostAddFunc);
+            _app?.MapPut(_entityEndpoints.GetAndEditAndDeleteByIdRoute, _entityEndpoints.PutEditByIdFunc);
+            _app?.MapDelete(_entityEndpoints.GetAndEditAndDeleteByIdRoute, _entityEndpoints.DeleteFunc);
         }
     }
 }

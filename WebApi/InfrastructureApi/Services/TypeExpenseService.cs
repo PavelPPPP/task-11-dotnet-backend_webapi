@@ -42,12 +42,12 @@ namespace InfrastructureApi.Services
             await _unitOfWork!.SaveAsync();
         }
 
-        public async Task UpdateAsync(TypeExpenseDTO typeExpenseDTO)
+        public async Task UpdateAsync(int? id, TypeExpenseDTO typeExpenseDTO)
         {
             if (typeExpenseDTO is null) throw new ArgumentNullException(nameof(typeExpenseDTO));
 
-            var typeExpense = await _typeExpenseRepository!.GetByIdAsync(typeExpenseDTO.Id) ?? throw new InvalidOperationException($"Data by id({typeExpenseDTO.Id}) not found!");
-            await CheckDuplicateByNameAndNotId(typeExpenseDTO.Id, typeExpenseDTO.Name);
+            var typeExpense = await _typeExpenseRepository!.GetByIdAsync(id) ?? throw new InvalidOperationException($"Data by id({id}) not found!");
+            await CheckDuplicateByNameAndNotId(id, typeExpenseDTO.Name);
             typeExpense.Change(new Name(typeExpenseDTO.Name), new FreeText(typeExpenseDTO.Description));
 
             _typeExpenseRepository.Update(typeExpense);

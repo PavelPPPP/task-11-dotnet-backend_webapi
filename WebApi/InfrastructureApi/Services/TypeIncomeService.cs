@@ -42,12 +42,12 @@ namespace InfrastructureApi.Services
             await _unitOfWork!.SaveAsync();
         }
 
-        public async Task UpdateAsync(TypeIncomeDTO typeIncomeDTO)
+        public async Task UpdateAsync(int? id, TypeIncomeDTO typeIncomeDTO)
         {
             if (typeIncomeDTO is null) throw new ArgumentNullException(nameof(typeIncomeDTO));
-            await CheckDuplicateByNameAndNotId(typeIncomeDTO.Id, typeIncomeDTO.Name);
+            await CheckDuplicateByNameAndNotId(id, typeIncomeDTO.Name);
 
-            var typeIncome = await _typeIncomeRepository!.GetByIdAsync(typeIncomeDTO.Id) ?? throw new InvalidOperationException($"Data by id({typeIncomeDTO.Id}) not found!");
+            var typeIncome = await _typeIncomeRepository!.GetByIdAsync(id) ?? throw new InvalidOperationException($"Data by id({id}) not found!");
             
             typeIncome.Change(new Name(typeIncomeDTO.Name), new FreeText(typeIncomeDTO.Description));
 

@@ -7,10 +7,8 @@ namespace SelfFinanceApp.CollectionEndpoints
     public class EntityEndpoints<TypeDTO> 
         where TypeDTO : BaseEntityDTO
     {
-        public string GetAllRoute { get; }
-        public string GetOrDeleteByIdRoute { get; }
-        public string PostAddRoute { get; }
-        public string PutEditRoute { get; }
+        public string GetAllAndPostRoute { get; }
+        public string GetAndEditAndDeleteByIdRoute { get; }
 
         private string _nameTypeEntity = String.Empty;
         private string _lowerNameTypeEntity = String.Empty;
@@ -20,10 +18,8 @@ namespace SelfFinanceApp.CollectionEndpoints
             _nameTypeEntity = DeletePartNameTypeEntity(typeof(TypeDTO).Name, "DTO");
             _lowerNameTypeEntity = LowerFirstChar(_nameTypeEntity);
 
-            GetAllRoute = $"/api/{_lowerNameTypeEntity}s";
-            GetOrDeleteByIdRoute = $"/api/{_lowerNameTypeEntity}s/{{id}}";
-            PostAddRoute = $"/api/{_lowerNameTypeEntity}s/add";
-            PutEditRoute = $"/api/{_lowerNameTypeEntity}s/edit";
+            GetAllAndPostRoute = $"/api/{_lowerNameTypeEntity}s";
+            GetAndEditAndDeleteByIdRoute = $"/api/{_lowerNameTypeEntity}s/{{id}}";
         }
 
         private string DeletePartNameTypeEntity(string name, string deletePartStr)
@@ -43,45 +39,51 @@ namespace SelfFinanceApp.CollectionEndpoints
             return tempStr;
         }
 
-        public async Task<IEnumerable<TypeDTO>> GetAllFunc(IEntityService<TypeDTO> incomeService, ILogger<EntityEndpoints<TypeDTO>> logger)
+        public async Task<IEnumerable<TypeDTO>> GetAllFunc(IEntityService<TypeDTO> entityService, ILogger<EntityEndpoints<TypeDTO>> logger)
         {
             logger.LogInformation($"Start GET request to get all {_nameTypeEntity}s");
-            var listResult = await incomeService.GetAllAsync();
+            var listResult = await entityService.GetAllAsync();
             logger.LogInformation($"End GET request to get all {_nameTypeEntity}s");
             return listResult;
         }
 
-        public async Task<object?> GetByIdFunc(int id, IEntityService<TypeDTO> incomeService, ILogger<EntityEndpoints<TypeDTO>> logger)
+        public async Task<object?> GetByIdFunc(int id, IEntityService<TypeDTO> entityService, ILogger<EntityEndpoints<TypeDTO>> logger)
         {
             logger.LogInformation($"Start GET request to get by id {_nameTypeEntity}");
             string endRequestMsgLog = $"End GET request to get by id {_nameTypeEntity}";
-            var income = await incomeService.GetByIdAsync(id);
-            if (income is null)
+            var entity = await entityService.GetByIdAsync(id);
+            if (entity is null)
             {
                 return Results.NotFound(NotFoundObjectRequest(logger, endRequestMsgLog));
             }
 
             logger.LogInformation(endRequestMsgLog);
-            return income;
+            return entity;
         }
 
-        public async Task<object> PostAddFunc(TypeDTO income, IEntityService<TypeDTO> incomeService, ILogger<EntityEndpoints<TypeDTO>> logger)
+        public async Task<object> PostAddFunc(TypeDTO entity, IEntityService<TypeDTO> entityService, ILogger<EntityEndpoints<TypeDTO>> logger)
         {
             logger.LogInformation($"Start POST request to add new {_nameTypeEntity}");
-            await incomeService.CreateAsync(income);
+            await entityService.CreateAsync(entity);
 
             logger.LogInformation($"End POST request to add new {_nameTypeEntity}");
             return new { message = $"{_nameTypeEntity} added successed!" };
         }
 
-        public async Task<object?> PutEditFunc(TypeDTO income, IEntityService<TypeDTO> incomeService, ILogger<EntityEndpoints<TypeDTO>> logger)
+        public async Task<object?> PutEditByIdFunc(int id, TypeDTO entity, IEntityService<TypeDTO> entityService, ILogger<EntityEndpoints<TypeDTO>> logger)
         {
             logger.LogInformation($"Start PUT request to edit exists {_nameTypeEntity}");
             string endRequestMsgLog = $"End PUT request to remove exists {_nameTypeEntity}";
-            await incomeService.UpdateAsync(income);
+            var editedEntity = await entityService.GetByIdAsync(id);
+            if (editedEntity is null)
+            {
+                return Results.NotFound(NotFoundObjectRequest(logger, endRequestMsgLog));
+            }
 
-            var editedEntity = await incomeService.GetByIdAsync(income.Id);
-            if (income is null)
+            await entityService.UpdateAsync(id, entity);
+
+            editedEntity = await entityService.GetByIdAsync(id);
+            if (editedEntity is null)
             {
                 return Results.NotFound(NotFoundObjectRequest(logger, endRequestMsgLog));
             }
@@ -89,20 +91,29 @@ namespace SelfFinanceApp.CollectionEndpoints
             return editedEntity;
         }
 
-        public async Task<object?> DeleteFunc(int id, IEntityService<TypeDTO> incomeService, ILogger<EntityEndpoints<TypeDTO>> logger)
+        public async Task<object?> DeleteFunc(int id, IEntityService<TypeDTO> entityService, ILogger<EntityEndpoints<TypeDTO>> logger)
         {
             logger.LogInformation($"Start DELETE request to remove exists {_nameTypeEntity}");
             string endRequestMsgLog = $"End DELETE request to remove exists {_nameTypeEntity}";
-            var income = await incomeService.GetByIdAsync(id);
-            if (income is null)
+            var entity = await entityService.GetByIdAsync(id);
+            if (entity is null)
             {
                 return Results.NotFound(NotFoundObjectRequest(logger, endRequestMsgLog));
             }
 
-            await incomeService.DeleteAsync(id);
+            await entityService.DeleteAsync(id);
 
             logger.LogInformation(endRequestMsgLog);
-            return income;
+            return entity;
+        }
+
+        private async Task<bool> CheckEntityNotFound(int id, IEntityService<TypeDTO> entityService)
+        {
+            var entity = await entityService.GetByIdAsync(id);
+            if (entity is null)
+                return true;
+
+            return false;
         }
 
         private object NotFoundObjectRequest(ILogger<EntityEndpoints<TypeDTO>> logger, string endRequestMessage, string warningMsg = "")

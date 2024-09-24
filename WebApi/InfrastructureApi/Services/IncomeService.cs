@@ -74,11 +74,12 @@ namespace InfrastructureApi.Services
             await _unitOfWork!.SaveAsync();
         }
 
-        public async Task UpdateAsync(IncomeDTO incomeDTO)
+        public async Task UpdateAsync(int? id, IncomeDTO incomeDTO)
         {
             if (incomeDTO is null) throw new ArgumentNullException(nameof(incomeDTO));
+            if (id is null) throw new ArgumentNullException(nameof(id));
 
-            var income = await _incomeRepository!.GetByIdAsync(incomeDTO.Id) ?? throw new InvalidOperationException($"Data by id({incomeDTO.Id}) not found!");
+            var income = await _incomeRepository!.GetByIdAsync(id) ?? throw new InvalidOperationException($"Data by id({id}) not found!");
             income.Change(new Amount(incomeDTO.Amount), incomeDTO.TypeId, new FreeText(incomeDTO.Comments));
 
             _incomeRepository.Update(income);
