@@ -74,6 +74,13 @@ namespace SelfFinanceApp.CollectionEndpoints
         {
             logger.LogInformation($"Start PUT request to edit exists {_nameTypeEntity}");
             string endRequestMsgLog = $"End PUT request to remove exists {_nameTypeEntity}";
+
+            if (id != entity.Id)
+            {
+                logger.LogInformation(endRequestMsgLog);
+                return Results.BadRequest("Path param Id not equal entity Id");
+            }
+
             var editedEntity = await entityService.GetByIdAsync(id);
             if (editedEntity is null)
             {

@@ -5,7 +5,7 @@ namespace SelfFinanceApp.CollectionEndpoints
 {
     public class ReportEndpoint
     {
-        public string GetReportRoute { get; } = "/api/report/toDate/{toDate}";
+        public string GetReportRoute { get; } = "/api/report/date";
         public string GetReportByPeriod { get; } = "/api/report/period";
 
         private readonly string warningMsgParsDate = "The date entered is incorrect.";
@@ -14,7 +14,7 @@ namespace SelfFinanceApp.CollectionEndpoints
         public ReportEndpoint() { }
 
         public async Task<object> GetDataReportFuncAsync(
-            string toDate
+            string date
             , IBallanseService<IncomeDTO> incomeService
             , IBallanseService<ExpenseDTO> expenseService
             , ILogger<ReportEndpoint> logger)
@@ -26,7 +26,7 @@ namespace SelfFinanceApp.CollectionEndpoints
             double? incomeSum = null;
             double? expenseSum = null;
 
-            if (!TryParseDateParam(toDate, out DateTime convertEndDate))
+            if (!TryParseDateParam(date, out DateTime convertEndDate))
             {
                 return CallBadRequest(logger, warningMsgParsDate, endRequestMessage);
             }
@@ -62,10 +62,10 @@ namespace SelfFinanceApp.CollectionEndpoints
         }
 
         public async Task<object> GetDataReportByPeriodFuncAsync(
-            string startDate
+            string from
             , IBallanseService<IncomeDTO> incomeService, IBallanseService<ExpenseDTO> expenseService
             , ILogger<ReportEndpoint> logger
-            , string? endDate = null)
+            , string? to = null)
         {
             string endRequestMessage = "End GET request to get data for report by period";
 
@@ -76,14 +76,14 @@ namespace SelfFinanceApp.CollectionEndpoints
 
             DateTime convertEndDate = DateTime.Now;
 
-            if (!TryParseDateParam(startDate, out DateTime convertStartDate))
+            if (!TryParseDateParam(from, out DateTime convertStartDate))
             {
                 return CallBadRequest(logger, warningMsgParsDate, endRequestMessage);
             }
 
-            if (endDate != null)
+            if (to != null)
             {
-                if (!TryParseDateParam(endDate, out convertEndDate))
+                if (!TryParseDateParam(to, out convertEndDate))
                 {
                     return CallBadRequest(logger, warningMsgParsDate, endRequestMessage);
                 }
