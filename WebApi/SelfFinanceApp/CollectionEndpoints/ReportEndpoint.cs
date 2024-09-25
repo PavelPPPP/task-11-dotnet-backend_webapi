@@ -1,5 +1,6 @@
 ﻿using InfrastructureApi.DTO;
 using InfrastructureApi.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SelfFinanceApp.CollectionEndpoints
 {
@@ -62,10 +63,10 @@ namespace SelfFinanceApp.CollectionEndpoints
         }
 
         public async Task<object> GetDataReportByPeriodFuncAsync(
-            string from
+            [FromQuery(Name = "from")] string fromDate
             , IBallanseService<IncomeDTO> incomeService, IBallanseService<ExpenseDTO> expenseService
             , ILogger<ReportEndpoint> logger
-            , string? to = null)
+            , [FromQuery(Name = "to")] string? toDate = null)
         {
             string endRequestMessage = "End GET request to get data for report by period";
 
@@ -76,14 +77,14 @@ namespace SelfFinanceApp.CollectionEndpoints
 
             DateTime convertEndDate = DateTime.Now;
 
-            if (!TryParseDateParam(from, out DateTime convertStartDate))
+            if (!TryParseDateParam(fromDate, out DateTime convertStartDate))
             {
                 return CallBadRequest(logger, warningMsgParsDate, endRequestMessage);
             }
 
-            if (to != null)
+            if (toDate != null)
             {
-                if (!TryParseDateParam(to, out convertEndDate))
+                if (!TryParseDateParam(toDate, out convertEndDate))
                 {
                     return CallBadRequest(logger, warningMsgParsDate, endRequestMessage);
                 }
