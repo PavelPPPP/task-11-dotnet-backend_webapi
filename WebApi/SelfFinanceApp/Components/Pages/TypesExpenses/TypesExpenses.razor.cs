@@ -28,7 +28,7 @@ namespace SelfFinanceApp.Components.Pages.TypesExpenses
             _requestUriForLoad = AppConfig["ApiBasePaths:TypesExpenses:List"] ?? throw new InvalidOperationException("Address List TypesExpenses is invalid!");
             _requestUriForDeleteItem = AppConfig["ApiBasePaths:TypesExpenses:Item"] ?? throw new InvalidOperationException("Address TypesExpense item is invalid!");
             _uriAddPageItem = "typesExpenses/add";
-            _uriBaseEditPageItem = "typesExpenses/edit/";
+            _uriBaseEditPageItem = "typesExpenses/edit/{0}";
 
             await LoadData();
         }

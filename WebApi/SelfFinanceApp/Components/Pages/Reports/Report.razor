@@ -11,7 +11,7 @@
 
 <p>
     <label for="typeReport">Type Report:
-        <InputSelect DisplayName="Type Report" id="typeReport" class="form-select" @bind-Value="_selectedTypeReport">
+        <InputSelect DisplayName="Type Report" id="typeReport" class="form-select" @bind-Value="SelectedTypeReport">
             <option value="@TypeReportEnum.ToDate" selected>To Date</option>
             <option value="@TypeReportEnum.ByPeriod">By Period</option>
         </InputSelect>

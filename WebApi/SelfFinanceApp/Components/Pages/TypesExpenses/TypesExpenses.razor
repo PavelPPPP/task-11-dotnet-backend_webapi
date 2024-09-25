@@ -17,8 +17,8 @@ else
                   CurrentPage="@CurrentPage"
                   RequestUriForLoadData="@_requestUriForLoad"
                   UriAddPageItem="@_uriAddPageItem"
-                  UriEditPageItem="@((item) => $"{_uriBaseEditPageItem}{item.Id}")"
-                  RequestUriForDeleteItem="@((item) => $"{_requestUriForDeleteItem}{item.Id}")">
+                  UriEditPageItem="@((item) => String.Format(_uriBaseEditPageItem!, item.Id))"
+                  RequestUriForDeleteItem="@((item) => String.Format(_requestUriForDeleteItem!, item.Id))">
         <HeaderColumnsTemplate>
             <th scope="col">Name</th>
             <th scope="col">Date</th>

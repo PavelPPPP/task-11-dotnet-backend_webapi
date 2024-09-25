@@ -76,7 +76,7 @@ namespace SelfFinanceApp.Components.Pages.BaseEditForm
             }
             else
             {
-                response = await httpClient.PutAsJsonAsync<TItem>(apiPathEditItem, itemEdited);
+                response = await httpClient.PutAsJsonAsync<TItem>(String.Format(apiPathEditItem, Id), itemEdited);
             }
 
             if (response.StatusCode != HttpStatusCode.OK)
@@ -97,7 +97,7 @@ namespace SelfFinanceApp.Components.Pages.BaseEditForm
         async Task GetItemById(int? id)
         {
             ErrorDTO? error;
-            var responseMsgIncome = await httpClient.GetAsync($"{apiPathGetItemById}{id}");
+            var responseMsgIncome = await httpClient.GetAsync(String.Format(apiPathGetItemById, id));
 
             if (responseMsgIncome.StatusCode != HttpStatusCode.OK)
             {

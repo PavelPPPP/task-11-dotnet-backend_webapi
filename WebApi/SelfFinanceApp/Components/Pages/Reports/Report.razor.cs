@@ -16,12 +16,22 @@ namespace SelfFinanceApp.Components.Pages.Reports
 
         private ReportDTO _report = null!;
 
-        private RenderFragment _incomeReportContent { get; set; } = default!;
-        private RenderFragment _expenseReportContent { get; set; } = default!;
-
         private string _msgWrongValidInputPeriodDate = "The start date of the period must not exceed the end date of the period!";
         private string _classesValid = "form-control";
         private string _classEnableValidMsg = "report__valid__list report__valid__list_disable";
+
+        private RenderFragment _incomeReportContent { get; set; } = default!;
+        private RenderFragment _expenseReportContent { get; set; } = default!;
+
+        private TypeReportEnum SelectedTypeReport
+        {
+            get => _selectedTypeReport;
+            set
+            {
+                OnSelectBeforeTypeReport(value);
+                _selectedTypeReport = value;
+            }
+        }
 
         protected override void OnInitialized()
         {
@@ -35,11 +45,13 @@ namespace SelfFinanceApp.Components.Pages.Reports
             string requestUri;
             if (typeReport == TypeReportEnum.ToDate)
             {
-                requestUri = $"{AppConfig["ApiBasePaths:Report:ToDate"]}{_inputedToDate.ToString("yyyyMMdd")}" ?? throw new InvalidOperationException("Uri api for report by date is invalid!");
+                requestUri = AppConfig["ApiBasePaths:Report:ToDate"] ?? throw new InvalidOperationException("Uri api for report by date is invalid!");
+                requestUri = String.Format(requestUri, _inputedToDate.ToString("yyyyMMdd"));
             }
             else
             {
-                requestUri = $"{AppConfig["ApiBasePaths:Report:ByPeriod"]}?startDate={_inputedFromDate.ToString("yyyyMMdd")}&endDate={_inputedToDate.ToString("yyyyMMdd")}" ?? throw new InvalidOperationException("Uri api for report by period is invalid!");
+                requestUri = AppConfig["ApiBasePaths:Report:ByPeriod"] ?? throw new InvalidOperationException("Uri api for report by period is invalid!");
+                requestUri = String.Format(requestUri, _inputedFromDate.ToString("yyyyMMdd"), _inputedToDate.ToString("yyyyMMdd"));
             }
 
             ErrorDTO? error;
@@ -63,7 +75,7 @@ namespace SelfFinanceApp.Components.Pages.Reports
         private async Task RunReport()
         {
             Reset(true);
-            ShowReport();
+
             if (_selectedTypeReport == TypeReportEnum.ByPeriod)
             {
                 bool statusValidate = IsValidInputPeriodDate();
@@ -72,6 +84,8 @@ namespace SelfFinanceApp.Components.Pages.Reports
                 if (!statusValidate)
                     return;
             }
+
+            ShowReport();
 
             await GenerateReport(_selectedTypeReport);
         }
@@ -133,6 +147,13 @@ namespace SelfFinanceApp.Components.Pages.Reports
             _incomeReportContent = default!;
             _expenseReportContent = default!;
             _report = null!;
+        }
+
+        private void OnSelectBeforeTypeReport(TypeReportEnum value)
+        {
+            if (value == _selectedTypeReport) { return; }
+
+            Reset();
         }
     }
 }

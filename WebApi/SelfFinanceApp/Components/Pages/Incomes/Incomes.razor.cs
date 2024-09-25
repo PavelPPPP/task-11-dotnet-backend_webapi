@@ -28,7 +28,7 @@ namespace SelfFinanceApp.Components.Pages.Incomes
             _requestUriForLoad = AppConfig["ApiBasePaths:Incomes:List"] ?? throw new InvalidOperationException("Address List Incomes is invalid!");
             _requestUriForDeleteItem = AppConfig["ApiBasePaths:Incomes:Item"] ?? throw new InvalidOperationException("Address Income item is invalid!");
             _uriAddPageItem = "incomes/add";
-            _uriBaseEditPageItem = "incomes/edit/";
+            _uriBaseEditPageItem = "incomes/edit/{0}";
 
             await LoadData();
         }
