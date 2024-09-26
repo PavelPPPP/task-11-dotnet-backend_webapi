@@ -63,9 +63,9 @@ namespace InfrastructureApi.Test
         [TestMethod]
         public void CreateAsync_ResultCreatedTypeExpense()
         {
-            TypeExpenseDTO insertedObject = null!;
+            TypeExpensesDTO insertedObject = null!;
             int? lastId = _service?.GetAllAsync().Result.LastOrDefault()?.Id;
-            TypeExpenseDTO createingTypeExpenseDTO = new TypeExpenseDTO()
+            TypeExpensesDTO createingTypeExpenseDTO = new TypeExpensesDTO()
             {
                 Name = "test",
                 Description = "test",
@@ -88,7 +88,7 @@ namespace InfrastructureApi.Test
         [TestMethod]
         public void UpdateAsync_ResultEditedTypeExpense()
         {
-            TypeExpenseDTO? editingTypeExpenseDTO = _service?.GetAllAsync().Result.LastOrDefault();
+            TypeExpensesDTO? editingTypeExpenseDTO = _service?.GetAllAsync().Result.LastOrDefault();
             string? nameBeforeEdit = editingTypeExpenseDTO?.Name;
             string? descriptionBeforeEdit = editingTypeExpenseDTO?.Description;
 
@@ -97,7 +97,7 @@ namespace InfrastructureApi.Test
 
             _service?.UpdateAsync(editingTypeExpenseDTO).Wait();
 
-            TypeExpenseDTO? editedTypeExpenseDTO = _service?.GetByIdAsync(editingTypeExpenseDTO.Id).Result;
+            TypeExpensesDTO? editedTypeExpenseDTO = _service?.GetByIdAsync(editingTypeExpenseDTO.Id).Result;
 
             Assert.IsNotNull(editedTypeExpenseDTO);
             Assert.AreNotEqual(nameBeforeEdit, editedTypeExpenseDTO.Name);
@@ -113,12 +113,12 @@ namespace InfrastructureApi.Test
         [TestMethod]
         public void DeleteAsync_ResultNull()
         {
-            TypeExpenseDTO? deletingTypeExpenseDTO = _service?.GetAllAsync().Result.LastOrDefault();
+            TypeExpensesDTO? deletingTypeExpenseDTO = _service?.GetAllAsync().Result.LastOrDefault();
             int? id = deletingTypeExpenseDTO?.Id;
 
             _service?.DeleteAsync(deletingTypeExpenseDTO?.Id).Wait();
 
-            TypeExpenseDTO? deletedTypeIncomDTO = _service?.GetByIdAsync(id).Result;
+            TypeExpensesDTO? deletedTypeIncomDTO = _service?.GetByIdAsync(id).Result;
 
             Assert.IsNull(deletedTypeIncomDTO);
         }

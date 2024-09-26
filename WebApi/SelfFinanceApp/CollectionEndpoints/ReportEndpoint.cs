@@ -15,7 +15,7 @@ namespace SelfFinanceApp.CollectionEndpoints
         public ReportEndpoint() { }
 
         public async Task<object> GetDataReportFuncAsync(
-            string date
+            [FromQuery(Name = "date")] string onDate
             , IBallanseService<IncomeDTO> incomeService
             , IBallanseService<ExpenseDTO> expenseService
             , ILogger<ReportEndpoint> logger)
@@ -27,7 +27,7 @@ namespace SelfFinanceApp.CollectionEndpoints
             double? incomeSum = null;
             double? expenseSum = null;
 
-            if (!TryParseDateParam(date, out DateTime convertEndDate))
+            if (!TryParseDateParam(onDate, out DateTime convertEndDate))
             {
                 return CallBadRequest(logger, warningMsgParsDate, endRequestMessage);
             }

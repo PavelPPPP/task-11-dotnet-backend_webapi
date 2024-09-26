@@ -1,13 +1,13 @@
 ﻿using SelfFinanceApp.CollectionEndpoints;
 
-namespace SelfFinanceApp.ServicesEndpoints
+namespace SelfFinanceApp.Services.Endpoints
 {
-    public class DailyReportEndpointService
+    public class ReportEndpointsService
     {
         private WebApplication? _app;
         private ReportEndpoint _endpoint;
 
-        public DailyReportEndpointService(WebApplication? app)
+        public ReportEndpointsService(WebApplication? app)
         {
             _app = app;
             _endpoint = new ReportEndpoint();

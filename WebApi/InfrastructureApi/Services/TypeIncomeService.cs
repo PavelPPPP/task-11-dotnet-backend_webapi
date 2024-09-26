@@ -6,7 +6,7 @@ using ModelApi.ValueObjects;
 
 namespace InfrastructureApi.Services
 {
-    public class TypeIncomeService : ModelService, IEntityService<TypeIncomeDTO>
+    public class TypeIncomeService : ModelService, IEntityService<TypeIncomesDTO>
     {
         private readonly ITypesBaseRepository<TypeIncome>? _typeIncomeRepository;
 
@@ -15,23 +15,23 @@ namespace InfrastructureApi.Services
             _typeIncomeRepository = unitOfWork.TypesIncomes;
         }
 
-        public async Task<IEnumerable<TypeIncomeDTO>> GetAllAsync()
+        public async Task<IEnumerable<TypeIncomesDTO>> GetAllAsync()
         {
-            var typesIncomes = await _typeIncomeRepository!.GetAllWithProjectionAsync(TypeIncomeDTO.TypeIncomeSelector);
+            var typesIncomes = await _typeIncomeRepository!.GetAllWithProjectionAsync(TypeIncomesDTO.TypeIncomeSelector);
 
             return typesIncomes;
         }
 
-        public async Task<TypeIncomeDTO?> GetByIdAsync(int? id)
+        public async Task<TypeIncomesDTO?> GetByIdAsync(int? id)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
 
-            var typeIncome = await _typeIncomeRepository!.GetByIdWithProjectionAsync(id, TypeIncomeDTO.TypeIncomeSelector);
+            var typeIncome = await _typeIncomeRepository!.GetByIdWithProjectionAsync(id, TypeIncomesDTO.TypeIncomeSelector);
 
             return typeIncome;
         }
 
-        public async Task CreateAsync(TypeIncomeDTO typeIncomeDTO)
+        public async Task CreateAsync(TypeIncomesDTO typeIncomeDTO)
         {
             if (typeIncomeDTO is null) throw new ArgumentNullException(nameof(typeIncomeDTO));
             await CheckDuplicateByName(typeIncomeDTO.Name);
@@ -42,7 +42,7 @@ namespace InfrastructureApi.Services
             await _unitOfWork!.SaveAsync();
         }
 
-        public async Task UpdateAsync(int? id, TypeIncomeDTO typeIncomeDTO)
+        public async Task UpdateAsync(int? id, TypeIncomesDTO typeIncomeDTO)
         {
             if (typeIncomeDTO is null) throw new ArgumentNullException(nameof(typeIncomeDTO));
             await CheckDuplicateByNameAndNotId(id, typeIncomeDTO.Name);

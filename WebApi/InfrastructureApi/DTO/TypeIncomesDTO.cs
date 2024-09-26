@@ -3,15 +3,15 @@ using System.Linq.Expressions;
 
 namespace InfrastructureApi.DTO
 {
-    public class TypeIncomeDTO : TypeBaseDTO
+    public class TypeIncomesDTO : TypeBaseDTO
     {
         public List<IncomeDTO>? Incomes { get; set; }
 
-        public static Expression<Func<TypeIncome, TypeIncomeDTO>> TypeIncomeSelector
+        public static Expression<Func<TypeIncome, TypeIncomesDTO>> TypeIncomeSelector
         {
             get
             {
-                return typeIncome => new TypeIncomeDTO()
+                return typeIncome => new TypeIncomesDTO()
                 {
                     Id = typeIncome.Id,
                     Name = typeIncome.Name.Value!,

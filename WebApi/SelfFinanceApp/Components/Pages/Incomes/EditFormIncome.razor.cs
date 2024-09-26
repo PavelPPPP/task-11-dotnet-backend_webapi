@@ -6,7 +6,7 @@ namespace SelfFinanceApp.Components.Pages.Incomes
 {
     public partial class EditFormIncome : BaseEditFormItem<IncomeDTO>
     {
-        List<TypeIncomeDTO>? typesIncomes;
+        List<TypeIncomesDTO>? typesIncomes;
         string apiPathGetTypesIncomes = default!;
 
         public EditFormIncome()
@@ -50,7 +50,7 @@ namespace SelfFinanceApp.Components.Pages.Incomes
                 throw new InvalidOperationException($"Status code: {(int)responseMsgTypesIncomes.StatusCode}\n{error?.Message}");
             }
 
-            typesIncomes = await responseMsgTypesIncomes.Content.ReadFromJsonAsync<List<TypeIncomeDTO>>();
+            typesIncomes = await responseMsgTypesIncomes.Content.ReadFromJsonAsync<List<TypeIncomesDTO>>();
         }
     }
 }

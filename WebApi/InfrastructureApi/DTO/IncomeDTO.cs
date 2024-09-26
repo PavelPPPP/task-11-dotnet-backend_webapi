@@ -5,7 +5,7 @@ namespace InfrastructureApi.DTO
 {
     public class IncomeDTO : BallanseDTO
     {
-        public TypeIncomeDTO? TypeIncome { get; set; }
+        public TypeIncomesDTO? TypeIncome { get; set; }
 
         public static Expression<Func<Income, IncomeDTO>> IncomeSelector
         {
@@ -19,7 +19,7 @@ namespace InfrastructureApi.DTO
                     UpdateDate = income.UpdateDate!.Value,
                     TypeId = income.TypeId,
                     Comments = income.Comments!.Value,
-                    TypeIncome = new TypeIncomeDTO()
+                    TypeIncome = new TypeIncomesDTO()
                     {
                         Id = income.TypeIncome!.Id,
                         Name = income.TypeIncome.Name.Value!

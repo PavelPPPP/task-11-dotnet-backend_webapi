@@ -3,12 +3,12 @@ using SelfFinanceApp.Components.Pages.BaseEditForm;
 
 namespace SelfFinanceApp.Components.Pages.TypesIncomes
 {
-    public partial class EditFormTypeIncomes : BaseEditFormItem<TypeIncomeDTO>
+    public partial class EditFormTypeIncomes : BaseEditFormItem<TypeIncomesDTO>
     {
         public EditFormTypeIncomes()
         {
-            itemOrigin = new TypeIncomeDTO();
-            itemEdited = new TypeIncomeDTO();
+            itemOrigin = new TypeIncomesDTO();
+            itemEdited = new TypeIncomesDTO();
             editContext = new(itemEdited);
         }
 

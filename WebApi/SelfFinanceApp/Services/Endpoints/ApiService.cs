@@ -1,14 +1,14 @@
 ﻿using InfrastructureApi.DTO;
 
-namespace SelfFinanceApp.ServicesEndpoints
+namespace SelfFinanceApp.Services.Endpoints
 {
     public class ApiService
     {
         private EntityEndpointsService<IncomeDTO> _incomeEndpointsService;
         private EntityEndpointsService<ExpenseDTO> _expenseEndpointsService;
-        private EntityEndpointsService<TypeIncomeDTO> _typeIncomeEndpointsService;
-        private EntityEndpointsService<TypeExpenseDTO> _typeExpenseEndpointsService;
-        private DailyReportEndpointService _dailyReportEndpointService;
+        private EntityEndpointsService<TypeIncomesDTO> _typeIncomeEndpointsService;
+        private EntityEndpointsService<TypeExpensesDTO> _typeExpenseEndpointsService;
+        private ReportEndpointsService _reportEndpointsService;
 
         public ApiService(WebApplication? app)
         {
@@ -16,9 +16,9 @@ namespace SelfFinanceApp.ServicesEndpoints
 
             _incomeEndpointsService = new EntityEndpointsService<IncomeDTO>(app);
             _expenseEndpointsService = new EntityEndpointsService<ExpenseDTO>(app);
-            _typeIncomeEndpointsService = new EntityEndpointsService<TypeIncomeDTO>(app);
-            _typeExpenseEndpointsService = new EntityEndpointsService<TypeExpenseDTO>(app);
-            _dailyReportEndpointService = new DailyReportEndpointService(app);
+            _typeIncomeEndpointsService = new EntityEndpointsService<TypeIncomesDTO>(app);
+            _typeExpenseEndpointsService = new EntityEndpointsService<TypeExpensesDTO>(app);
+            _reportEndpointsService = new ReportEndpointsService(app);
         }
 
         public void MapApi()
@@ -27,7 +27,7 @@ namespace SelfFinanceApp.ServicesEndpoints
             _expenseEndpointsService.Map();
             _typeIncomeEndpointsService.Map();
             _typeExpenseEndpointsService.Map();
-            _dailyReportEndpointService.Map();
+            _reportEndpointsService.Map();
         }
     }
 }

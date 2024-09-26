@@ -1,4 +1,4 @@
-﻿namespace SelfFinanceApp.Components.Pages.Reports
+﻿namespace SelfFinanceApp.Common.Enums
 {
     public enum TypeReportEnum
     {

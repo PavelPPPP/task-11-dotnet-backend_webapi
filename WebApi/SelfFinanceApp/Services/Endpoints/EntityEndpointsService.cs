@@ -1,7 +1,7 @@
 ﻿using InfrastructureApi.DTO;
 using SelfFinanceApp.CollectionEndpoints;
 
-namespace SelfFinanceApp.ServicesEndpoints
+namespace SelfFinanceApp.Services.Endpoints
 {
     public class EntityEndpointsService<TypeDTO> where TypeDTO : BaseEntityDTO
     {

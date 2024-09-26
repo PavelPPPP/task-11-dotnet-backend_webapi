@@ -6,7 +6,7 @@ using ModelApi.ValueObjects;
 
 namespace InfrastructureApi.Services
 {
-    public class TypeExpenseService : ModelService, IEntityService<TypeExpenseDTO>
+    public class TypeExpenseService : ModelService, IEntityService<TypeExpensesDTO>
     {
         private readonly ITypesBaseRepository<TypeExpense>? _typeExpenseRepository;
 
@@ -15,23 +15,23 @@ namespace InfrastructureApi.Services
             _typeExpenseRepository = unitOfWork.TypesExpenses;
         }
 
-        public async Task<IEnumerable<TypeExpenseDTO>> GetAllAsync()
+        public async Task<IEnumerable<TypeExpensesDTO>> GetAllAsync()
         {
-            var typesExpenses = await _typeExpenseRepository!.GetAllWithProjectionAsync(TypeExpenseDTO.TypeExpenseSelector);
+            var typesExpenses = await _typeExpenseRepository!.GetAllWithProjectionAsync(TypeExpensesDTO.TypeExpenseSelector);
 
             return typesExpenses;
         }
 
-        public async Task<TypeExpenseDTO?> GetByIdAsync(int? id)
+        public async Task<TypeExpensesDTO?> GetByIdAsync(int? id)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
 
-            var typeExpense = await _typeExpenseRepository!.GetByIdWithProjectionAsync(id, TypeExpenseDTO.TypeExpenseSelector);
+            var typeExpense = await _typeExpenseRepository!.GetByIdWithProjectionAsync(id, TypeExpensesDTO.TypeExpenseSelector);
 
             return typeExpense;
         }
 
-        public async Task CreateAsync(TypeExpenseDTO typeExpenseDTO)
+        public async Task CreateAsync(TypeExpensesDTO typeExpenseDTO)
         {
             if (typeExpenseDTO is null) throw new ArgumentNullException(nameof(typeExpenseDTO));
             await CheckDuplicateByName(typeExpenseDTO.Name);
@@ -42,7 +42,7 @@ namespace InfrastructureApi.Services
             await _unitOfWork!.SaveAsync();
         }
 
-        public async Task UpdateAsync(int? id, TypeExpenseDTO typeExpenseDTO)
+        public async Task UpdateAsync(int? id, TypeExpensesDTO typeExpenseDTO)
         {
             if (typeExpenseDTO is null) throw new ArgumentNullException(nameof(typeExpenseDTO));
 

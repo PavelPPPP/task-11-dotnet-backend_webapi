@@ -12,11 +12,11 @@
         </div>
 
         <article class="content px-4">
-            <ErrorBoundary Context="Exception" @ref="errorBoundary" >
+            <ErrorBoundary @ref="errorBoundary" >
                 <ChildContent>
                     @Body
                 </ChildContent>
-                <ErrorContent>
+                <ErrorContent Context="Exception">
                     <div class="alert alert-danger">
                         @if (HostEnvironment.IsProduction())
                         {
@@ -27,7 +27,7 @@
                             <span>@Exception.Message</span>
                         }
                         <div>
-                            <button class="btn btn-primary" @onclick="errorBoundary.Recover">Close</button>
+                            <button class="btn btn-primary" @onclick="errorBoundary!.Recover">Close</button>
                         </div>
                     </div>
                 </ErrorContent>
@@ -38,10 +38,10 @@
 
 
 @code {
-    ErrorBoundary errorBoundary = null!;
+    ErrorBoundary? errorBoundary;
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
-        errorBoundary = new ErrorBoundary();
+        errorBoundary?.Recover();
     }
 }

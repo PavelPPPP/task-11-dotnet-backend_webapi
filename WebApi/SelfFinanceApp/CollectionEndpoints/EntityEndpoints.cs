@@ -1,6 +1,7 @@
 ﻿using InfrastructureApi.DTO;
 using InfrastructureApi.Common;
 using System.Text.RegularExpressions;
+using SelfFinanceApp.Common;
 
 namespace SelfFinanceApp.CollectionEndpoints
 {
@@ -11,15 +12,15 @@ namespace SelfFinanceApp.CollectionEndpoints
         public string GetAndEditAndDeleteByIdRoute { get; }
 
         private string _nameTypeEntity = String.Empty;
-        private string _lowerNameTypeEntity = String.Empty;
+        private string _apiController = String.Empty;
 
         public EntityEndpoints()
         {
-            _nameTypeEntity = DeletePartNameTypeEntity(typeof(TypeDTO).Name, "DTO");
-            _lowerNameTypeEntity = LowerFirstChar(_nameTypeEntity);
+            _nameTypeEntity = typeof(TypeDTO).Name.DeletePartNameTypeEntity("DTO");
+            _apiController = _nameTypeEntity.LowerFirstChar();
 
-            GetAllAndPostRoute = $"/api/{_lowerNameTypeEntity}s";
-            GetAndEditAndDeleteByIdRoute = $"/api/{_lowerNameTypeEntity}s/{{id}}";
+            GetAllAndPostRoute = $"/api/{_apiController}";
+            GetAndEditAndDeleteByIdRoute = $"/api/{_apiController}/{{id}}";
         }
 
         private string DeletePartNameTypeEntity(string name, string deletePartStr)

@@ -2,6 +2,8 @@
 using InfrastructureApi.DTO;
 using Microsoft.AspNetCore.Components;
 using System.Net;
+using SelfFinanceApp.Common.Enums;
+using SelfFinanceApp.Services.RoutesCollection;
 
 namespace SelfFinanceApp.Components.Pages.Reports
 {
@@ -19,6 +21,10 @@ namespace SelfFinanceApp.Components.Pages.Reports
         private string _msgWrongValidInputPeriodDate = "The start date of the period must not exceed the end date of the period!";
         private string _classesValid = "form-control";
         private string _classEnableValidMsg = "report__valid__list report__valid__list_disable";
+
+        [Inject] protected IHttpClientFactory ClientFactory { get; set; } = default!;
+        [Inject] protected IConfiguration AppConfig { get; set; } = default!;
+        [Inject] private RoutesCollectionService RoutesApi { get; set; } = default!;
 
         private RenderFragment _incomeReportContent { get; set; } = default!;
         private RenderFragment _expenseReportContent { get; set; } = default!;
@@ -45,13 +51,11 @@ namespace SelfFinanceApp.Components.Pages.Reports
             string requestUri;
             if (typeReport == TypeReportEnum.ToDate)
             {
-                requestUri = AppConfig["ApiBasePaths:Report:ToDate"] ?? throw new InvalidOperationException("Uri api for report by date is invalid!");
-                requestUri = String.Format(requestUri, _inputedToDate.ToString("yyyyMMdd"));
+                requestUri = RoutesApi.GetRouteReportOnDate(_inputedToDate.ToString("yyyyMMdd"));
             }
             else
             {
-                requestUri = AppConfig["ApiBasePaths:Report:ByPeriod"] ?? throw new InvalidOperationException("Uri api for report by period is invalid!");
-                requestUri = String.Format(requestUri, _inputedFromDate.ToString("yyyyMMdd"), _inputedToDate.ToString("yyyyMMdd"));
+                requestUri = RoutesApi.GetRouteReportByPeriod(_inputedFromDate.ToString("yyyyMMdd"), _inputedToDate.ToString("yyyyMMdd"));
             }
 
             ErrorDTO? error;

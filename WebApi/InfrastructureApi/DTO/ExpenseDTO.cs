@@ -5,7 +5,7 @@ namespace InfrastructureApi.DTO
 {
     public class ExpenseDTO : BallanseDTO
     {
-        public TypeExpenseDTO? TypeExpense { get; set; }
+        public TypeExpensesDTO? TypeExpense { get; set; }
 
         public static Expression<Func<Expense, ExpenseDTO>> ExpenseSelector
         {
@@ -19,7 +19,7 @@ namespace InfrastructureApi.DTO
                     UpdateDate = expense.UpdateDate!.Value,
                     TypeId = expense.TypeId,
                     Comments = expense.Comments!.Value,
-                    TypeExpense = new TypeExpenseDTO()
+                    TypeExpense = new TypeExpensesDTO()
                     {
                         Id = expense.TypeExpense!.Id,
                         Name = expense.TypeExpense.Name.Value!

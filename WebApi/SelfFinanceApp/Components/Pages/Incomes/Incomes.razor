@@ -2,23 +2,25 @@
 @using InfrastructureApi.DTO
 @using SelfFinanceApp.Components.DataGrid
 @using SelfFinanceApp.Components.Layout
+@using SelfFinanceApp.Common
+
+@inherits BaseEntityPage<IncomeDTO>
 
 @rendermode RenderMode.InteractiveServer
 
-@if (_incomes == null)
+@if (listEntity == null)
 {
     <SpinnerLoading />
 }
 else
 {
-    <BaseDataGrid TDataItem="IncomeDTO"
-                  Items="@_incomes"
+    <BaseDataGrid Items="@listEntity"
                   PageTitle="Incomes"
                   CurrentPage="@CurrentPage"
-                  RequestUriForLoadData="@_requestUriForLoad"
-                  UriAddPageItem="@_uriAddPageItem"
-                  UriEditPageItem="@((item) => String.Format(_uriBaseEditPageItem!, item.Id))"
-                  RequestUriForDeleteItem="@((item) => String.Format(_requestUriForDeleteItem!, item.Id))">
+                  RequestUriForLoadData="@requestUriForLoad"
+                  UriAddPageItem="@uriAddPageItem"
+                  UriEditPageItem="@((item) => String.Format(uriBaseEditPageItem!, item.Id))"
+                  RequestUriForDeleteItem="@((item) => RoutesEntity.GetRouteEntity(nameApiController, item.Id))">
         <HeaderColumnsTemplate>
             <th scope="col">Name Income</th>
             <th scope="col">Date</th>

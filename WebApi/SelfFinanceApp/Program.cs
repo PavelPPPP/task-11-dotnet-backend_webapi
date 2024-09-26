@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using SelfFinanceApp.ServicesEndpoints;
+using SelfFinanceApp.Services.Endpoints;
 using SelfFinanceApp.Providers;
 using Serilog;
 using SelfFinanceApp.Components;
@@ -25,6 +25,7 @@ try
     builder.Services.AddEfUnitOfWorkService();
     builder.Services.AddSelfFinanceEntityServices();
     builder.Services.AddRouteHistoryService();
+    builder.Services.AddRoutesApiCollectionService();
 
     var app = builder.Build();
 

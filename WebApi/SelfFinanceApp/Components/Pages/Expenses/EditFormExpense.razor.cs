@@ -6,7 +6,7 @@ namespace SelfFinanceApp.Components.Pages.Expenses
 {
     public partial class EditFormExpense : BaseEditFormItem<ExpenseDTO>
     {
-        List<TypeExpenseDTO>? typesExpenses;
+        List<TypeExpensesDTO>? typesExpenses;
         string apiPathGetTypesExpenses = default!;
 
         public EditFormExpense()
@@ -50,7 +50,7 @@ namespace SelfFinanceApp.Components.Pages.Expenses
                 throw new InvalidOperationException($"Status code: {(int)responseMsgTypesExpenses.StatusCode}\n{error!.Message}");
             }
 
-            typesExpenses = await responseMsgTypesExpenses.Content.ReadFromJsonAsync<List<TypeExpenseDTO>>();
+            typesExpenses = await responseMsgTypesExpenses.Content.ReadFromJsonAsync<List<TypeExpensesDTO>>();
         }
     }
 }
