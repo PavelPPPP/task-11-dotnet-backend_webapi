@@ -28,14 +28,14 @@ namespace SelfFinanceApp.Components.DataGrid
 
         protected override void OnInitialized()
         {
-            CalculateTotalPages();
+            RefreshCalculate();
         }
 
         protected override void OnParametersSet()
         {
             if (CountItems != _copyCountItems)
             {
-                CalculateTotalPages();
+                RefreshCalculate();
             }
         }
 
@@ -53,6 +53,12 @@ namespace SelfFinanceApp.Components.DataGrid
             {
                 Navigation.NavigateTo(GetUriPage(1));
             }
+        }
+
+        void RefreshCalculate()
+        {
+            CalculateTotalPages();
+            _copyCountItems = CountItems;
         }
 
         string GetDisableClass()

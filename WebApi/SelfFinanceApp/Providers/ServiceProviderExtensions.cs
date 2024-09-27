@@ -8,6 +8,8 @@ using ModelApi.Services.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using SelfFinanceApp.Services.RouteHistory;
 using SelfFinanceApp.Services.RoutesCollection;
+using SelfFinanceApp.Services.ApiCRUD;
+using SelfFinanceApp.Services.ViewModelServices;
 
 namespace SelfFinanceApp.Providers
 {
@@ -41,6 +43,12 @@ namespace SelfFinanceApp.Providers
         public static void AddRoutesApiCollectionService(this IServiceCollection services)
         {
             services.AddSingleton<RoutesCollectionService>();
+        }
+
+        public static void AddViewModelServices(this IServiceCollection services)
+        {
+            services.AddScoped<EntitiesService>();
+            services.AddScoped<ReportService>();
         }
     }
 }

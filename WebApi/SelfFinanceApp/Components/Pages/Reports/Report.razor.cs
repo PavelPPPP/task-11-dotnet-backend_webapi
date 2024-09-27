@@ -1,9 +1,7 @@
 ﻿using InfrastructureApi.DTO.Reports;
-using InfrastructureApi.DTO;
 using Microsoft.AspNetCore.Components;
-using System.Net;
 using SelfFinanceApp.Common.Enums;
-using SelfFinanceApp.Services.RoutesCollection;
+using SelfFinanceApp.Services.ViewModelServices;
 
 namespace SelfFinanceApp.Components.Pages.Reports
 {
@@ -14,20 +12,16 @@ namespace SelfFinanceApp.Components.Pages.Reports
         private DateTime _inputedFromDate = (DateTime.Now.Date).AddDays(-1);
         private DateTime _inputedToDate = DateTime.Now.Date;
 
-        private HttpClient _httpClient = default!;
-
         private ReportDTO _report = null!;
 
         private string _msgWrongValidInputPeriodDate = "The start date of the period must not exceed the end date of the period!";
         private string _classesValid = "form-control";
         private string _classEnableValidMsg = "report__valid__list report__valid__list_disable";
 
-        [Inject] protected IHttpClientFactory ClientFactory { get; set; } = default!;
-        [Inject] protected IConfiguration AppConfig { get; set; } = default!;
-        [Inject] private RoutesCollectionService RoutesApi { get; set; } = default!;
-
         private RenderFragment _incomeReportContent { get; set; } = default!;
         private RenderFragment _expenseReportContent { get; set; } = default!;
+
+        [Inject] ReportService ReportService { get; set; } = default!;
 
         private TypeReportEnum SelectedTypeReport
         {
@@ -39,35 +33,17 @@ namespace SelfFinanceApp.Components.Pages.Reports
             }
         }
 
-        protected override void OnInitialized()
-        {
-            string adressHost = AppConfig["AddressHost"] ?? throw new InvalidOperationException("Address Host is invalid!");
-            _httpClient = ClientFactory.CreateClient();
-            _httpClient.BaseAddress = new Uri(adressHost);
-        }
-
         private async Task GenerateReport(TypeReportEnum typeReport)
         {
-            string requestUri;
-            if (typeReport == TypeReportEnum.ToDate)
+            switch (typeReport)
             {
-                requestUri = RoutesApi.GetRouteReportOnDate(_inputedToDate.ToString("yyyyMMdd"));
+                case TypeReportEnum.ToDate:
+                    _report = await ReportService.ReportOnDate(_inputedToDate);
+                    return;
+                case TypeReportEnum.ByPeriod:
+                    _report = await ReportService.ReportByPeriod(_inputedFromDate, _inputedToDate);
+                    return;
             }
-            else
-            {
-                requestUri = RoutesApi.GetRouteReportByPeriod(_inputedFromDate.ToString("yyyyMMdd"), _inputedToDate.ToString("yyyyMMdd"));
-            }
-
-            ErrorDTO? error;
-            var responseReport = await _httpClient.GetAsync(requestUri);
-
-            if (responseReport.StatusCode != HttpStatusCode.OK)
-            {
-                error = await responseReport.Content.ReadFromJsonAsync<ErrorDTO>();
-                throw new InvalidOperationException($"Status code: {(int)responseReport.StatusCode}\n{error?.Message}");
-            }
-
-            _report = await responseReport.Content.ReadFromJsonAsync<ReportDTO>() ?? _report;
         }
 
         private void ShowReport()

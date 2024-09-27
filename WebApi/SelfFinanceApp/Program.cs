@@ -26,6 +26,7 @@ try
     builder.Services.AddSelfFinanceEntityServices();
     builder.Services.AddRouteHistoryService();
     builder.Services.AddRoutesApiCollectionService();
+    builder.Services.AddViewModelServices();
 
     var app = builder.Build();
 

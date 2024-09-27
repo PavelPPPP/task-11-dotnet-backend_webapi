@@ -18,10 +18,8 @@ else
     <BaseDataGrid Items="@listEntity"
                   PageTitle="Types Incomes"
                   CurrentPage="@CurrentPage"
-                  RequestUriForLoadData="@requestUriForLoad"
                   UriAddPageItem="@uriAddPageItem"
-                  UriEditPageItem="@((item) => String.Format(uriBaseEditPageItem!, item.Id))"
-                  RequestUriForDeleteItem="@((item) => RoutesEntity.GetRouteEntity(nameApiController, item.Id))">
+                  UriEditPageItem="@((item) => String.Format(uriBaseEditPageItem!, item.Id))">
         <HeaderColumnsTemplate>
             <th scope="col">Name</th>
             <th scope="col">Date</th>
