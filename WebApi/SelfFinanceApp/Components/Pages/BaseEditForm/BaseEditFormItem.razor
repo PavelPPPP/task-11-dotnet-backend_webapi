@@ -2,34 +2,13 @@
 
 <PageTitle>@HeaderPage</PageTitle>
 
-<h1>@HeaderPage</h1>
+<MudText Typo="Typo.h3">@HeaderPage</MudText>
 
 <EditForm EditContext="@editContext">
     <DataAnnotationsValidator />
     <ValidationSummary />
     @_renderInputComponetsForm
-    <p>
-        <button class="btn btn-success" type="button" @onclick="() => ShowModal(idModal)">Save</button>
-        <button class="btn btn-dark" type="button" @onclick="GoToBack">Cancel</button>
-        <button class="btn btn-secondary" type="button" @onclick="CopyItem">Reset</button>
-    </p>
+    <MudButton Color="Color.Primary" OnClick="Submit">Save</MudButton>
+    <MudButton Color="Color.Secondary" OnClick="GoToBack">Cancel</MudButton>
+    <MudButton Color="Color.Dark" OnClick="CopyItem">Reset</MudButton>
 </EditForm>
-
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">@titleModal</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                @msgModal
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="Submit">Yes</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-            </div>
-        </div>
-    </div>
-</div>

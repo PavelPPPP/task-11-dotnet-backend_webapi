@@ -1,76 +1,49 @@
-﻿@typeparam TDataItem
+﻿@using SelfFinanceApp.Exceptions
+@typeparam TDataItem
 
 @attribute [StreamRendering]
 
+<style>
+    .selected {
+        background-color: #1E88E5 !important;
+    }
+    .selected > td {
+        color: white !important;
+    }
+    .selected > td .mud-input {
+        color: white !important;
+    }
+
+    .editable_btn {
+        position: fixed;
+        right: 0;
+        opacity: 0.4;
+    }
+
+    .editable_btn:hover {
+        opacity: 1;
+    }
+</style>
+
 <PageTitle>@PageTitle</PageTitle>
 
-<h1>@PageTitle.ToUpper()</h1>
+<MudText Typo="Typo.h3">@PageTitle.ToUpper()</MudText>
 
-<div>
-    <button class="btn btn-primary" @onclick="GoToCreate">Add new item</button>
-</div>
+<MudStack Class="d-flex editable_btn z-100 mr-15 mt-1 align-center">
+    <MudFab Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Medium" OnClick="GoToCreate" />
+    <MudFab Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" Size="Size.Small" @bind-Disabled="btnsCrudDisabled" OnClick="()=>GoToEdit(_mudTable.SelectedItem!, UriEditPageItem)" />
+    <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Remove" Size="Size.Small" @bind-Disabled="btnsCrudDisabled" OnClick="OnDelete" />
+</MudStack>
 
-<table class="table table-hover">
-    <thead>
-        <tr>
-            @HeaderColumnsTemplate
-            <th scope="col"></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in ItemsForPage!)
-        {
-            <tr>
-                @ColumnsTemplate!(item)
-                <td>
-                    <div>
-                        <button class="btn btn-primary" id="edit" @onclick="()=>GoToEdit(item, UriEditPageItem)">Edit</button>
-                        <button class="btn btn-dark" id="delete" @onclick="()=>ShowConfirmModal(_idConfirmModal, item)">
-                            Delete
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-@if (Items.Count > 0)
-{
-    <Pagination CountItems="Items.Count" CurrentPage="@CurrentPage" @bind-PageSize=PageSize></Pagination>
-}
-
-<!-- Modals -->
-<div class="modal fade" id="confirmModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">@_titleModal</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Please confirm deletion of data
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="()=>DeleteSelectedItem(_selectedItem)">Yes</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="infoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">@_titleModal</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                @_msgModal
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
-            </div>
-        </div>
-    </div>
-</div>
+<MudTable T="TDataItem" Items="@Items" Hover="true" Breakpoint="Breakpoint.Sm" @ref="_mudTable"
+          RowClass="cursor-pointer" OnRowClick="RowClickEvent" RowClassFunc="@SelectedRowClassFunc">
+    <HeaderContent>
+        @HeaderColumnsTemplate
+    </HeaderContent>
+    <RowTemplate>
+        @ColumnsTemplate(context)
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

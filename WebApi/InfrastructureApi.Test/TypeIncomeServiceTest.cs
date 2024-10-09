@@ -82,7 +82,7 @@ namespace InfrastructureApi.Test
         [TestMethod]
         public void UpdateAsync_CheckParamForNull_ThrowArgumentNullException()
         {
-            Assert.ThrowsExceptionAsync<ArgumentNullException>(() => _service?.UpdateAsync(null!));
+            Assert.ThrowsExceptionAsync<ArgumentNullException>(() => _service?.UpdateAsync(null, null!));
         }
 
         [TestMethod]
@@ -95,7 +95,7 @@ namespace InfrastructureApi.Test
             editingTypeIncomeDTO!.Name = "test_edit";
             editingTypeIncomeDTO!.Description = "test_edit";
 
-            _service?.UpdateAsync(editingTypeIncomeDTO).Wait();
+            _service?.UpdateAsync(editingTypeIncomeDTO.Id, editingTypeIncomeDTO).Wait();
 
             TypeIncomesDTO? editedTypeIncomeDTO = _service?.GetByIdAsync(editingTypeIncomeDTO.Id).Result;
 

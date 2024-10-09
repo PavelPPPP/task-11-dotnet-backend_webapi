@@ -1,43 +1,14 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Self Finance</a>
-    </div>
-</div>
-
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
-
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="incomes/">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Incomes
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="expenses/">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Expenses
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="typesIncomes/">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Types Incomes
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="typesExpenses/">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Types Expenses
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="report">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Report
-            </NavLink>
-        </div>
-    </nav>
-</div>
-
+﻿<MudPaper Width="260px" Elevation="0">
+    <MudNavMenu Rounded="true" Margin="Margin.Dense" Color="Color.Primary" Class="pa-2">
+        <MudNavLink Match="NavLinkMatch.All" Href="" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+        <MudNavGroup Icon="@Icons.Material.Filled.CurrencyExchange" Title="Finance operations" Expanded="true">
+            <MudNavLink Href="incomes">Incomes</MudNavLink>
+            <MudNavLink Href="expenses">Expenses</MudNavLink>
+        </MudNavGroup>
+        <MudNavGroup Icon="@Icons.Material.Filled.LocalAtm" Title="Types operations" Expanded="true">
+            <MudNavLink Href="typesIncomes">Types Incomes</MudNavLink>
+            <MudNavLink Href="typesExpenses">Types Expenses</MudNavLink>
+        </MudNavGroup>
+        <MudNavLink Icon="@Icons.Material.Filled.RequestPage" Href="report">Report</MudNavLink>
+    </MudNavMenu>
+</MudPaper>

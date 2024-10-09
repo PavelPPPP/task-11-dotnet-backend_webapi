@@ -2,7 +2,7 @@
 {
     public enum TypeReportEnum
     {
-        ToDate,
+        OnDate,
         ByPeriod
     }
 }

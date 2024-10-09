@@ -22,19 +22,18 @@
         @_renderForm
     </ChildContent>
     <ErrorContent>
-        <div class="alert alert-danger">
+        <MudAlert Severity="Severity.Error" Variant="Variant.Outlined" NoIcon="true" Class="my-2">
             @if (HostEnvironment.IsProduction())
             {
-                <span>An error has occurred.</span>
+                <MudText>An error has occurred.</MudText>
             }
             else
             {
-                <span>@Exception.Message</span>
+                <MudText>@Exception.Message</MudText>
             }
-            <div>
-                <button class="btn btn-primary" @onclick="GoToBack">Close</button>
-            </div>
-        </div>
+            
+            <MudButton Color="Color.Primary" OnClick="GoToBack">Close</MudButton>
+        </MudAlert>
     </ErrorContent>
 </ErrorBoundary>
 

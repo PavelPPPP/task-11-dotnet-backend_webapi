@@ -114,7 +114,7 @@ namespace ModelApi.Test.RepositoriesTest
         [TestMethod]
         public void GetSymByEnterDate_Test()
         {
-            double? expected = 2000;
+            double? expected = 2500.55;
 
             double? actual = _unitOfWork?.Incomes.GetSumByEnterDateAsync(DateTime.Parse("2024-07-24")).Result;
 

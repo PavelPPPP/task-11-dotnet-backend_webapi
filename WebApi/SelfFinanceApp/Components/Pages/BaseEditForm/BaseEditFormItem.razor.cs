@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 using SelfFinanceApp.Services.RouteHistory;
 using InfrastructureApi.DTO;
-using SelfFinanceApp.Services.ApiCRUD;
+using SelfFinanceApp.Services.ViewModelServices;
+using MudBlazor;
 
 namespace SelfFinanceApp.Components.Pages.BaseEditForm
 {
@@ -15,19 +15,17 @@ namespace SelfFinanceApp.Components.Pages.BaseEditForm
         [Parameter]
         public string HeaderPage { set; get; } = "Edit";
 
-        [Inject] IJSRuntime JS { get; set; } = default!;
-        [Inject] NavigationManager Navigation { get; set; } = default!;
-        [Inject] RouteHistoryService RouteHistory { get; set; } = default!;
         [Inject] protected EntitiesService ApiCRUD { get; set; } = default!;
+        [Inject] private NavigationManager Navigation { get; set; } = default!;
+        [Inject] private RouteHistoryService RouteHistory { get; set; } = default!;
+        
+        [Inject] private IDialogService DialogService { get; set; } = default!;
+        [Inject] private ISnackbar Snackbar { get; set; } = default!; 
         
 
         protected EditContext? editContext;
         protected TItem itemOrigin = default!;
         protected TItem itemEdited = default!;
-
-        private string titleModal = "Confirm saving item";        
-        private string msgModal = "...";
-        private string idModal = "staticBackdrop";
 
         private RenderFragment? _renderInputComponetsForm { get; set; }
 
@@ -51,13 +49,26 @@ namespace SelfFinanceApp.Components.Pages.BaseEditForm
 
         protected internal async Task Submit()
         {
+            if (editContext == null || !editContext.Validate())
+            {
+                return;
+            }
+
+            if (await ShowModal() == null)
+            {
+                Snackbar.Add("Canceled operation!", Severity.Info);
+                return;
+            }
+
             if (Id is null || Id == 0)
             {
                 await ApiCRUD.PostItem<TItem>(itemEdited);
+                Snackbar.Add("Added success!", Severity.Success);
             }
             else
             {
-                await ApiCRUD.PutItem<TItem>(itemEdited);
+                await ApiCRUD.PutOrDeleteItem<TItem>(itemEdited);
+                Snackbar.Add("Edited success!", Severity.Success);
             }
 
             GoToBack();
@@ -69,20 +80,26 @@ namespace SelfFinanceApp.Components.Pages.BaseEditForm
             Navigation.NavigateTo(Navigation.ToBaseRelativePath(prevPath));
         }
 
-        async Task ShowModal(string idModal)
+        async Task<bool?> ShowModal()
         {
-            if (editContext != null && editContext.Validate())
+            bool? result = false;
+
+            if (Id is null || Id == 0)
             {
-                if (Id is null || Id == 0)
-                {
-                    msgModal = "Please confirm adding data";
-                }
-                else
-                {
-                    msgModal = "Please confirm the data changes";
-                }
-                await JS.InvokeVoidAsync("showModal", idModal);
+                result = await DialogService.ShowMessageBox(
+                "Add item",
+                "Please confirm adding data",
+                yesText: "ADD", cancelText: "Cancel");
             }
+            else
+            {
+                result = await DialogService.ShowMessageBox(
+                "Edit item",
+                "Please confirm the data changes",
+                yesText: "EDIT", cancelText: "Cancel");
+            }
+
+            return result;
         }
     }
 }

@@ -10,13 +10,7 @@
 @code {
     protected internal override void RenderInputComponentsForm(RenderTreeBuilder __builder)
     {
-        <p>
-            <label for="typeName" class="form-label">Type name:</label>
-            <InputText DisplayName="Type Name" class="form-control" id="typeName" @bind-Value="itemEdited.Name" />
-        </p>
-        <p>
-            <label for="description" class="form-label">Description:</label>
-            <InputTextArea DisplayName="Description" class="form-control" id="description" @bind-Value="itemEdited.Description" />
-        </p>
+        <MudTextField @bind-Value="itemEdited.Name" For="@(() => itemEdited.Name)" Label="Name" Variant="Variant.Text" Class="mt-6"></MudTextField>
+        <MudTextField @bind-Value="itemEdited.Description" For="@(() => itemEdited.Description)" Label="Description" Variant="Variant.Text" Class="mt-6"></MudTextField>
     }
 }

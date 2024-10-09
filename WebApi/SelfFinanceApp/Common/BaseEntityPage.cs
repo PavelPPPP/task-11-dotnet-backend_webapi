@@ -1,6 +1,6 @@
 ﻿using InfrastructureApi.DTO;
 using Microsoft.AspNetCore.Components;
-using SelfFinanceApp.Services.ApiCRUD;
+using SelfFinanceApp.Services.ViewModelServices;
 
 namespace SelfFinanceApp.Common
 {

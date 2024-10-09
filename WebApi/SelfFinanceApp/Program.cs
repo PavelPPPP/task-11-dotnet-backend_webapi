@@ -3,6 +3,7 @@ using SelfFinanceApp.Services.Endpoints;
 using SelfFinanceApp.Providers;
 using Serilog;
 using SelfFinanceApp.Components;
+using MudBlazor.Services;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -27,6 +28,7 @@ try
     builder.Services.AddRouteHistoryService();
     builder.Services.AddRoutesApiCollectionService();
     builder.Services.AddViewModelServices();
+    builder.Services.AddMudServices();
 
     var app = builder.Build();
 

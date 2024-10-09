@@ -1,7 +1,8 @@
 ﻿using InfrastructureApi.DTO;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
-using SelfFinanceApp.Services.ApiCRUD;
+using MudBlazor;
+using SelfFinanceApp.Exceptions;
+using SelfFinanceApp.Services.ViewModelServices;
 using SelfFinanceApp.Services.RouteHistory;
 
 namespace SelfFinanceApp.Components.DataGrid
@@ -24,77 +25,118 @@ namespace SelfFinanceApp.Components.DataGrid
         public RenderFragment? HeaderColumnsTemplate { get; set; }
 
         [Parameter, EditorRequired]
-        public RenderFragment<TDataItem>? ColumnsTemplate { get; set; }
+        public RenderFragment<TDataItem> ColumnsTemplate { get; set; } = default!;
 
-        [Parameter]
-        public int CurrentPage { get; set; }
-        [Parameter]
-        public int PageSize { get; set; } = 5;
+        private int selectedRowNumber = -1;
+        private MudTable<TDataItem> _mudTable = default!;
+        private bool btnsCrudDisabled = true;
+        private TDataItem? _selectedItem;
 
-        [Inject] NavigationManager Navigation { get; set; } = default!;
-        [Inject] IJSRuntime JS { get; set; } = default!;
-        [Inject] RouteHistoryService RouteHistory { get; set; } = default!;
-        [Inject] EntitiesService ApiCRUD { get; set; } = default!;
+        [Inject] private NavigationManager Navigation { get; set; } = default!;
+        [Inject] private RouteHistoryService RouteHistory { get; set; } = default!;
+        [Inject] private EntitiesService ApiCRUD { get; set; } = default!;
+        [Inject] private IDialogService DialogService { get; set; } = default!;
+        [Inject] private ISnackbar Snackbar { get; set; } = default!;
 
-        List<TDataItem>? ItemsForPage
-        {
-            get { return Items!.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList(); }
-        }
-
-        TDataItem? _selectedItem;
-
-        string _titleModal = "";
-        string _msgModal = "...";
-        string _idConfirmModal = "confirmModal";
-        string _idInfoModal = "infoModal";
-
-        void UpdateRouteHistory()
+        private void UpdateRouteHistory()
         {
             RouteHistory.Clear();
             RouteHistory.AddRoute(Navigation.Uri);
         }
 
-        void GoToEdit(TDataItem item, Func<TDataItem, string> getUri)
+        private void GoToEdit(TDataItem item, Func<TDataItem, string> getUri)
         {
             UpdateRouteHistory();
             string uri = getUri(item);
             Navigation.NavigateTo(uri);
         }
 
-        void GoToCreate()
+        private void GoToCreate()
         {
             UpdateRouteHistory();
             Navigation.NavigateTo(UriAddPageItem);
         }
 
-        void Refresh()
-        {
-            Navigation.Refresh(true);
-        }
-
-        async Task DeleteSelectedItem(TDataItem? selectedItem)
+        private async Task DeleteSelectedItem(TDataItem? selectedItem)
         {
             if (selectedItem is null)
             {
-                throw new InvalidOperationException($"Selected item not found!");
+                throw new ArgumentNullException(nameof(selectedItem));
             }
 
-            _msgModal = await ApiCRUD.DeleteItem(selectedItem);
-
-            Items?.Remove(selectedItem!);
-            ItemsForPage?.Remove(selectedItem!);
-            await ShowModal(_idInfoModal);
+            await ApiCRUD.PutOrDeleteItem(selectedItem);
         }
 
-        async Task ShowModal(string idModal)
+        private void RowClickEvent(TableRowClickEventArgs<TDataItem> tableRowClickEventArgs)
         {
-            await JS.InvokeVoidAsync("showModal", idModal);
+            if (_selectedItem != null && tableRowClickEventArgs.Item!.Equals(_selectedItem))
+            {
+                _selectedItem = null;
+                btnsCrudDisabled = true;
+            }
+            else
+            {
+                _selectedItem = tableRowClickEventArgs.Item;
+                btnsCrudDisabled = false;
+            }
         }
 
-        async Task ShowConfirmModal(string idModal, TDataItem item)
+        private string SelectedRowClassFunc(TDataItem element, int rowNumber)
         {
-            _selectedItem = item;
-            await ShowModal(idModal);
+            if (selectedRowNumber == rowNumber)
+            {
+                selectedRowNumber = -1;
+                return string.Empty;
+            }
+            else if (_mudTable.SelectedItem != null && _mudTable.SelectedItem.Equals(element))
+            {
+                selectedRowNumber = rowNumber;
+                return "selected";
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
+        private async void OnDelete()
+        {
+            if (await ShowDialogDelete() == null)
+            {
+                Snackbar.Add("Canceled deleting!", Severity.Info);
+            }
+            else
+            {
+                try
+                {
+                    await DeleteSelectedItem(_mudTable.SelectedItem);
+                    Snackbar.Add("Deleted successed!");
+                }
+                catch (SelfFinanceApiException ex)
+                {
+                    if ((int)ex.StatusCode != 404)
+                    {
+                        throw;
+                    }
+
+                    Snackbar.Add($"Status code: {(int)ex.StatusCode} - {ex.Message}", Severity.Error);
+                }
+
+                Items?.Remove(_mudTable.SelectedItem!);
+                btnsCrudDisabled = true;
+            }
+
+            StateHasChanged();
+        }
+
+        private async Task<bool?> ShowDialogDelete()
+        {
+            bool? result = await DialogService.ShowMessageBox(
+                "Delet item",
+                "Please confirm deletion of data",
+                yesText: "DELETE", cancelText: "Cancel");
+
+            return result;
         }
     }
 }

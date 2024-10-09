@@ -1,10 +1,8 @@
 ﻿using InfrastructureApi.DTO;
 using SelfFinanceApp.Common;
 using SelfFinanceApp.Services.RoutesCollection;
-using SelfFinanceApp.Services.ViewModelServices;
-using System.Net;
 
-namespace SelfFinanceApp.Services.ApiCRUD
+namespace SelfFinanceApp.Services.ViewModelServices
 {
     public class EntitiesService : BaseService
     {
@@ -47,7 +45,7 @@ namespace SelfFinanceApp.Services.ApiCRUD
             await CheckErrorResponse(response);
         }
 
-        public async Task PutItem<TEntityDTO>(TEntityDTO item) where TEntityDTO : BaseEntityDTO
+        public async Task PutOrDeleteItem<TEntityDTO>(TEntityDTO item) where TEntityDTO : BaseEntityDTO
         {
             if (item is null) throw new ArgumentNullException(nameof(item));
 
@@ -55,35 +53,6 @@ namespace SelfFinanceApp.Services.ApiCRUD
 
             var response = await httpClient.PutAsJsonAsync(requestUri, item);
             await CheckErrorResponse(response);
-        }
-
-        public async Task<string> DeleteItem<TEntityDTO>(TEntityDTO item) where TEntityDTO : BaseEntityDTO
-        {
-            if (item is null) throw new ArgumentNullException(nameof(item));
-
-            ErrorDTO? error;
-
-            string requestUri = routesCollection.GetRouteEntity(GetNameController(typeof(TEntityDTO)), item.Id);
-
-            var response = await httpClient.DeleteAsync(requestUri);
-
-            switch (response.StatusCode)
-            {
-                case HttpStatusCode.OK:
-                    {
-                        return "The selected item has been deleted successfully.";
-                    }
-                case HttpStatusCode.NotFound:
-                    {
-                        error = await response.Content.ReadFromJsonAsync<ErrorDTO>();
-                        return error!.Message;
-                    }
-                default:
-                    {
-                        error = await response.Content.ReadFromJsonAsync<ErrorDTO>();
-                        throw new InvalidOperationException($"Status code: {(int)response.StatusCode}\n{error!.Message}");
-                    }
-            }
         }
 
         private async Task<HttpResponseMessage> GetResponseMessage(string requestUriForLoad)

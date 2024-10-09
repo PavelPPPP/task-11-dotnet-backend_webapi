@@ -7,10 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\myScript.js" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="MudBlazor" Version="7.8.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
   </ItemGroup>
 
@@ -23,14 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <_ContentIncludedByDefault Remove="Components\Layout\SpinnerLoading.razor" />
+    <_ContentIncludedByDefault Remove="Components\Pages\Reports\ChartsReport.razor" />
     <_ContentIncludedByDefault Remove="Components\Pages\TypesExpenses\EditFormTypeExpenses.razor" />
     <_ContentIncludedByDefault Remove="Components\Pages\TypesExpenses\TypesExpenses.razor" />
-    <_ContentIncludedByDefault Remove="wwwroot\myScript.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\myScript.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <UpToDateCheckInput Remove="Components\Layout\SpinnerLoading.razor" />
+    <UpToDateCheckInput Remove="Components\Pages\Reports\ChartsReport.razor" />
   </ItemGroup>
 
 </Project>

@@ -8,7 +8,6 @@ using ModelApi.Services.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using SelfFinanceApp.Services.RouteHistory;
 using SelfFinanceApp.Services.RoutesCollection;
-using SelfFinanceApp.Services.ApiCRUD;
 using SelfFinanceApp.Services.ViewModelServices;
 
 namespace SelfFinanceApp.Providers

@@ -1,5 +1,6 @@
 ﻿using InfrastructureApi.DTO.Reports;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using SelfFinanceApp.Common.Enums;
 using SelfFinanceApp.Services.ViewModelServices;
 
@@ -7,10 +8,10 @@ namespace SelfFinanceApp.Components.Pages.Reports
 {
     public partial class Report
     {
-        private TypeReportEnum _selectedTypeReport;
+        private TypeReportEnum _selectedTypeReport = TypeReportEnum.OnDate;
 
-        private DateTime _inputedFromDate = (DateTime.Now.Date).AddDays(-1);
-        private DateTime _inputedToDate = DateTime.Now.Date;
+        private DateTime? _inputedOnDate = DateTime.Now.Date;
+        private DateRange _dateRange = new DateRange(DateTime.Now.Date.AddDays(-1).Date, DateTime.Now.Date);
 
         private ReportDTO _report = null!;
 
@@ -20,6 +21,7 @@ namespace SelfFinanceApp.Components.Pages.Reports
 
         private RenderFragment _incomeReportContent { get; set; } = default!;
         private RenderFragment _expenseReportContent { get; set; } = default!;
+        private RenderFragment _chartsReport { get; set; } = default!;
 
         [Inject] ReportService ReportService { get; set; } = default!;
 
@@ -37,11 +39,11 @@ namespace SelfFinanceApp.Components.Pages.Reports
         {
             switch (typeReport)
             {
-                case TypeReportEnum.ToDate:
-                    _report = await ReportService.ReportOnDate(_inputedToDate);
+                case TypeReportEnum.OnDate:
+                    _report = await ReportService.ReportOnDate(_inputedOnDate!.Value);
                     return;
                 case TypeReportEnum.ByPeriod:
-                    _report = await ReportService.ReportByPeriod(_inputedFromDate, _inputedToDate);
+                    _report = await ReportService.ReportByPeriod(_dateRange.Start!.Value, _dateRange.End!.Value);
                     return;
             }
         }
@@ -50,73 +52,24 @@ namespace SelfFinanceApp.Components.Pages.Reports
         {
             _incomeReportContent = RenderIncomeReportContent;
             _expenseReportContent = RenderExpenseReportContent;
+            _chartsReport = RenderChartsReport;
         }
 
         private async Task RunReport()
         {
             Reset(true);
 
-            if (_selectedTypeReport == TypeReportEnum.ByPeriod)
-            {
-                bool statusValidate = IsValidInputPeriodDate();
-                ShowValidateMsg(statusValidate);
-
-                if (!statusValidate)
-                    return;
-            }
-
             ShowReport();
 
             await GenerateReport(_selectedTypeReport);
-        }
-
-        private bool IsValidInputPeriodDate()
-        {
-            if (_inputedFromDate > _inputedToDate)
-                return false;
-
-            return true;
-        }
-
-        private void ShowValidateMsg(bool statusValidate)
-        {
-            ChangeIputeFieldValidate(statusValidate);
-
-            if (!statusValidate)
-            {
-                _classEnableValidMsg = "report__valid__list report__valid__list_enable";
-
-                return;
-            }
-
-            _classEnableValidMsg = "report__valid__list report__valid__list_disable";
-        }
-
-        private void ChangeIputeFieldValidate(bool statusValidate)
-        {
-            if (!statusValidate)
-            {
-                _classesValid = "form-control report__valid__input_wrong";
-
-                return;
-            }
-
-            _classesValid = "form-control report__valid__input_ok";
-        }
-
-        private void OnChangeFieldPeriodDate()
-        {
-            bool statusValidate = IsValidInputPeriodDate();
-            ShowValidateMsg(statusValidate);
         }
 
         private void Reset(bool reReport = false)
         {
             if (!reReport)
             {
-                _inputedFromDate = (DateTime.Now.Date).AddDays(-1);
-                _inputedToDate = DateTime.Now.Date;
-                OnChangeFieldPeriodDate();
+                _dateRange = new DateRange(DateTime.Now.Date.AddDays(-1).Date, DateTime.Now.Date);
+                _inputedOnDate = DateTime.Now.Date;
             }
 
             if (_report is null)
@@ -126,6 +79,7 @@ namespace SelfFinanceApp.Components.Pages.Reports
 
             _incomeReportContent = default!;
             _expenseReportContent = default!;
+            _chartsReport = default!;
             _report = null!;
         }
 

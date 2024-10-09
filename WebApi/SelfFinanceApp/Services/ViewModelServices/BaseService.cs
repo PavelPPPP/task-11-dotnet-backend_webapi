@@ -1,4 +1,5 @@
 ﻿using InfrastructureApi.DTO;
+using SelfFinanceApp.Exceptions;
 using SelfFinanceApp.Services.RoutesCollection;
 using System.Net;
 
@@ -23,7 +24,7 @@ namespace SelfFinanceApp.Services.ViewModelServices
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 error = await response.Content.ReadFromJsonAsync<ErrorDTO>();
-                throw new InvalidOperationException($"Status code: {(int)response.StatusCode}\n{error!.Message}");
+                throw new SelfFinanceApiException(error!.Message, response.StatusCode);
             }
         }
 

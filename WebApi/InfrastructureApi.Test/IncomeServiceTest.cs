@@ -57,7 +57,7 @@ namespace InfrastructureApi.Test
         [TestMethod]
         public void GetSumByEnterDateAsync_ReturnSumAmount()
         {
-            double expectedSumAmount = 2000;
+            double expectedSumAmount = 2500.55;
 
             var actualSumAmount = _service?.GetSumByEnterDateAsync(DateTime.Parse("2024-07-24")).Result;
 
@@ -139,7 +139,7 @@ namespace InfrastructureApi.Test
         [TestMethod]
         public void UpdateAsync_CheckParamForNull_ThrowArgumentNullException()
         {
-            Assert.ThrowsExceptionAsync<ArgumentNullException>(() => _service?.UpdateAsync(null!));
+            Assert.ThrowsExceptionAsync<ArgumentNullException>(() => _service?.UpdateAsync(null, null!));
         }
 
         [TestMethod]
@@ -152,7 +152,7 @@ namespace InfrastructureApi.Test
             editingIncomeDTO!.Amount = 2000;
             editingIncomeDTO!.Comments = "test_edit";
 
-            _service?.UpdateAsync(editingIncomeDTO).Wait();
+            _service?.UpdateAsync(editingIncomeDTO.Id, editingIncomeDTO).Wait();
 
             IncomeDTO? editedIncomeDTO = _service?.GetByIdAsync(editingIncomeDTO.Id).Result;
 

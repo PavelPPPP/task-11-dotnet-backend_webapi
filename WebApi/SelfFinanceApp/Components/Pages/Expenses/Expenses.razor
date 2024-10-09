@@ -1,4 +1,4 @@
-﻿@page "/expenses/{currentPage:int=1}"
+﻿@page "/expenses"
 @using InfrastructureApi.DTO
 @using SelfFinanceApp.Components.DataGrid
 @using SelfFinanceApp.Components.Layout
@@ -10,26 +10,25 @@
 
 @if (listEntity == null)
 {
-    <SpinnerLoading />
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
 }
 else
 {
     <BaseDataGrid Items="@listEntity"
                   PageTitle="Expenses"
-                  CurrentPage="@CurrentPage"
                   UriAddPageItem="@uriAddPageItem"
                   UriEditPageItem="@((item) => String.Format(uriBaseEditPageItem!, item.Id))">
         <HeaderColumnsTemplate>
-            <th scope="col">Name Expense</th>
-            <th scope="col">Date</th>
-            <th scope="col">Time</th>
-            <th scope="col">Amount</th>
+            <MudTh>Name Expense</MudTh>
+            <MudTh>Date</MudTh>
+            <MudTh>Time</MudTh>
+            <MudTh>Amount</MudTh>
         </HeaderColumnsTemplate>
         <ColumnsTemplate>
-            <td>@context.TypeExpense!.Name</td>
-            <td>@context.CreateDate!.Value.ToShortDateString()</td>
-            <td>@context.CreateDate!.Value.ToLongTimeString()</td>
-            <td>@context.Amount!.Value</td>
+            <MudTd DataLabel="Name Income">@context.TypeExpense?.Name</MudTd>
+            <MudTd DataLabel="Date">@context.CreateDate!.Value.ToShortDateString()</MudTd>
+            <MudTd DataLabel="Time">@context.CreateDate!.Value.ToLongTimeString()</MudTd>
+            <MudTd DataLabel="Amount">@context.Amount</MudTd>
         </ColumnsTemplate>
     </BaseDataGrid>
 }
