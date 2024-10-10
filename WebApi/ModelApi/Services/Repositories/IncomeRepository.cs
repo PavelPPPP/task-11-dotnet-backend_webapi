@@ -144,13 +144,13 @@ namespace ModelApi.Services.Repositories
 
         private Expression<Func<Income, bool>> IsByEnteredDate(DateTime toDate)
         {
-            return i => i.CreateDate.Value.Date == toDate;
+            return i => i.CreateDate.Value.Date == toDate.Date;
         }
 
         private Expression<Func<Income, bool>> IsByPeriod(DateTime fromDate, DateTime toDate)
         {
-            return i => i.CreateDate.Value.Date >= fromDate
-                && i.CreateDate.Value.Date <= toDate;
+            return i => i.CreateDate.Value.Date >= fromDate.Date
+                && i.CreateDate.Value.Date <= toDate.Date;
         }
     }
 }
