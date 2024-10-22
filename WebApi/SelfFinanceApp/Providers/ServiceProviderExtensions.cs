@@ -6,9 +6,6 @@ using ModelApi.Interfaces;
 using ModelApi.Services.DataSource;
 using ModelApi.Services.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
-using SelfFinanceApp.Services.RouteHistory;
-using SelfFinanceApp.Services.RoutesCollection;
-using SelfFinanceApp.Services.ViewModelServices;
 
 namespace SelfFinanceApp.Providers
 {
@@ -32,22 +29,6 @@ namespace SelfFinanceApp.Providers
             services.AddScoped<IEntityService<ExpenseDTO>, ExpenseService>();
             services.AddScoped<IBallanseService<IncomeDTO>, IncomeService>();
             services.AddScoped<IBallanseService<ExpenseDTO>, ExpenseService>();
-        }
-
-        public static void AddRouteHistoryService(this IServiceCollection services)
-        {
-            services.AddSingleton<RouteHistoryService>();
-        }
-
-        public static void AddRoutesApiCollectionService(this IServiceCollection services)
-        {
-            services.AddSingleton<RoutesCollectionService>();
-        }
-
-        public static void AddViewModelServices(this IServiceCollection services)
-        {
-            services.AddScoped<EntitiesService>();
-            services.AddScoped<ReportService>();
         }
     }
 }

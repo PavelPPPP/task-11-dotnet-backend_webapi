@@ -1,7 +1,6 @@
 ﻿using InfrastructureApi.DTO;
 using InfrastructureApi.Common;
-using System.Text.RegularExpressions;
-using SelfFinanceApp.Common;
+using InfrastructureApi.Extensions;
 
 namespace SelfFinanceApp.CollectionEndpoints
 {
@@ -16,28 +15,11 @@ namespace SelfFinanceApp.CollectionEndpoints
 
         public EntityEndpoints()
         {
-            _nameTypeEntity = typeof(TypeDTO).Name.DeletePartNameTypeEntity("DTO");
+            _nameTypeEntity = typeof(TypeDTO).Name.ReplacePartNameTypeEntity("DTO", "s");
             _apiController = _nameTypeEntity.LowerFirstChar();
 
             GetAllAndPostRoute = $"/api/{_apiController}";
             GetAndEditAndDeleteByIdRoute = $"/api/{_apiController}/{{id}}";
-        }
-
-        private string DeletePartNameTypeEntity(string name, string deletePartStr)
-        {
-            string tempStr = name;
-            tempStr = Regex.Replace(tempStr, @$"{deletePartStr}$", "");
-
-            return tempStr;
-        }
-
-        private string LowerFirstChar(string str)
-        {
-            string tempStr = str;
-            char firstChar = str[0];
-            tempStr = Regex.Replace(tempStr, @"^\w{1}", firstChar.ToString().ToLower());
-
-            return tempStr;
         }
 
         public async Task<IEnumerable<TypeDTO>> GetAllFunc(IEntityService<TypeDTO> entityService, ILogger<EntityEndpoints<TypeDTO>> logger)

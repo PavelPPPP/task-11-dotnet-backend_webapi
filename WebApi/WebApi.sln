@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InfrastructureApi.Test", "I
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SelfFinanceApp", "SelfFinanceApp\SelfFinanceApp.csproj", "{74C48235-DA68-4E57-84F1-F6F4C3BACF65}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfFinanceBlazor", "SelfFinanceBlazor\SelfFinanceBlazor.csproj", "{CF40AA64-A7FF-4013-AA8A-5487D92AD8E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{74C48235-DA68-4E57-84F1-F6F4C3BACF65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74C48235-DA68-4E57-84F1-F6F4C3BACF65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74C48235-DA68-4E57-84F1-F6F4C3BACF65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF40AA64-A7FF-4013-AA8A-5487D92AD8E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF40AA64-A7FF-4013-AA8A-5487D92AD8E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF40AA64-A7FF-4013-AA8A-5487D92AD8E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF40AA64-A7FF-4013-AA8A-5487D92AD8E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
