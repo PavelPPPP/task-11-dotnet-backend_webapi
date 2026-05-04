@@ -15,7 +15,8 @@ namespace ModelApi.Services.DataSource
 
 
             var optionsBuilder = new DbContextOptionsBuilder<SelfFinanceDbContext>();
-            string connectionString = "Server=(localdb)\\mssqllocaldb;Database=SelfFinance;Trusted_Connection=True;";
+            //string connectionString = "Server=(localdb)\\mssqllocaldb;Database=SelfFinance;Trusted_Connection=True;";
+            string connectionString = "Server=tcp:pavlopi.database.windows.net,1433;Initial Catalog=SelfFinance;Persist Security Info=False;User ID=pavlopi;Password=devarT001;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             optionsBuilder.UseSqlServer(connectionString);
             return new SelfFinanceDbContext(optionsBuilder.Options);
         }

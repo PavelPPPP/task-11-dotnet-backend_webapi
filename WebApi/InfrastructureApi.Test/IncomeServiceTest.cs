@@ -15,7 +15,8 @@ namespace InfrastructureApi.Test
         public static void ClassInitialize(TestContext testContext)
         {
             var optionsBuilder = new DbContextOptionsBuilder<SelfFinanceDbContext>();
-            string connectionString = "Server=(localdb)\\mssqllocaldb;Database=SelfFinance;Trusted_Connection=True;";
+            //string connectionString = "Server=(localdb)\\mssqllocaldb;Database=SelfFinance;Trusted_Connection=True;";
+            string connectionString = "Server=tcp:pavlopi.database.windows.net,1433;Initial Catalog=SelfFinance;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=Active Directory Default;";
             optionsBuilder.UseSqlServer(connectionString);
             var dbContext = new SelfFinanceDbContext(optionsBuilder.Options);
             var unitOfWork = new EFUnitOfWork(dbContext);
